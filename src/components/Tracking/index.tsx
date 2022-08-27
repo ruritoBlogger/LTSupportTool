@@ -1,6 +1,6 @@
 import AppCubismUserModel from "@libs/CubismModel";
 import { models } from "@libs/model";
-import { live2dRender } from "@libs/renderer";
+import { draw, live2dRender } from "@libs/renderer";
 import { Camera } from "@mediapipe/camera_utils";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import {
@@ -10,6 +10,7 @@ import {
   Results as FaceResult,
 } from "@mediapipe/face_mesh";
 import axios from "axios";
+import { Face } from "kalidokit";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
@@ -17,11 +18,26 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * @url https://zenn.dev/mooriii/articles/f6a2eef484e837
  */
 const Tracking = (): JSX.Element => {
-  const [, setMod] = useState<AppCubismUserModel | null>(null);
+  const [mod, setMod] = useState<AppCubismUserModel | null>(null);
   const avatarCanvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { model: live2dModel } = models;
+
+  const animateLive2DModel = useCallback(
+    (points: NormalizedLandmarkList) => {
+      const videoElement = videoRef.current;
+      if (!mod || !points) return;
+      const riggedFace = Face.solve(points, {
+        runtime: "mediapipe",
+        video: videoElement,
+      });
+
+      const lastUpdateTime = Date.now();
+      draw(avatarCanvasRef.current!, lastUpdateTime, mod, riggedFace, 0);
+    },
+    [mod]
+  );
 
   const load = useCallback(async () => {
     if (canvasRef.current!) {
@@ -98,8 +114,9 @@ const Tracking = (): JSX.Element => {
   const onResult = useCallback(
     (results: FaceResult) => {
       drawResults(results.multiFaceLandmarks[0]);
+      animateLive2DModel(results.multiFaceLandmarks[0]);
     },
-    [drawResults]
+    [animateLive2DModel, drawResults]
   );
 
   useEffect(() => {
@@ -162,6 +179,8 @@ const Tracking = (): JSX.Element => {
           top: 0,
           left: 0,
           position: "absolute",
+          zIndex: 1,
+          backgroundColor: "white",
         }}
       />
     </div>
