@@ -15,6 +15,9 @@
       "@components/*": [
         "./src/components/*"
       ],
+      "@libs/*": [
+        "./src/libs/*"
+      ]
     },
     "lib": [
       "dom",
