@@ -1,3 +1,6 @@
+import AppCubismUserModel from "@libs/CubismModel";
+import { models } from "@libs/model";
+import { live2dRender } from "@libs/renderer";
 import { Camera } from "@mediapipe/camera_utils";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import {
@@ -6,15 +9,66 @@ import {
   NormalizedLandmarkList,
   Results as FaceResult,
 } from "@mediapipe/face_mesh";
-import { useCallback, useEffect, useRef } from "react";
+import axios from "axios";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * カメラ情報を用いた顔のトラッキングを行う
  * @url https://zenn.dev/mooriii/articles/f6a2eef484e837
  */
 const Tracking = (): JSX.Element => {
+  const [, setMod] = useState<AppCubismUserModel | null>(null);
+  const avatarCanvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { model: live2dModel } = models;
+
+  const load = useCallback(async () => {
+    if (canvasRef.current!) {
+      try {
+        const [model, moc3, physics, ...textures] = await Promise.all([
+          axios
+            .get<ArrayBuffer>(live2dModel.model3, {
+              responseType: "arraybuffer",
+            })
+            .then((res) => res.data),
+          axios
+            .get(live2dModel.moc3, { responseType: "arraybuffer" })
+            .then((res) => res.data),
+          axios
+            .get(live2dModel.physics3, { responseType: "arraybuffer" })
+            .then((res) => res.data),
+          ...live2dModel.textures.map(async (texture) => {
+            const res = await axios.get(texture, { responseType: "blob" });
+            return res.data;
+          }),
+        ]);
+
+        const mod = await live2dRender(
+          avatarCanvasRef.current!,
+          model,
+          {
+            moc3,
+            physics,
+            textures,
+          },
+          {
+            autoBlink: true,
+            x: 0,
+            y: 0,
+            scale: 4,
+          }
+        );
+        setMod(mod);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const drawResults = useCallback((points: NormalizedLandmarkList) => {
     const videoElement = videoRef.current;
@@ -99,6 +153,16 @@ const Tracking = (): JSX.Element => {
           transform: "ScaleX(-1)",
         }}
         ref={canvasRef}
+      />
+      <canvas
+        ref={avatarCanvasRef}
+        width={1200}
+        height={720}
+        style={{
+          top: 0,
+          left: 0,
+          position: "absolute",
+        }}
       />
     </div>
   );
