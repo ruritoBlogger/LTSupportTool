@@ -12,21 +12,9 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@db/*": [
-        "./src/db/*"
-      ],
       "@components/*": [
         "./src/components/*"
       ],
-      "@hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@domains/*": [
-        "./src/domains/*"
-      ],
-      "@utils/*": [
-        "./src/utils/*"
-      ]
     },
     "lib": [
       "dom",
