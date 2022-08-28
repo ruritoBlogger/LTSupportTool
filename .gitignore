@@ -5,6 +5,4 @@ dist
 out
 public/*
 !public/.gitkeep
-src/libs/*
-!src/libs/.gitkeep
-!src/libs/Framework
+src/libs/Core
