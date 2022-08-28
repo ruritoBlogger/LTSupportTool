@@ -42,7 +42,7 @@ const Tracking = (): JSX.Element => {
   const load = useCallback(async () => {
     if (canvasRef.current!) {
       try {
-        const [model, moc3, physics, ...textures] = await Promise.all([
+        const [model, moc3, physics] = await Promise.all([
           axios
             .get<ArrayBuffer>(live2dModel.model3, {
               responseType: "arraybuffer",
@@ -54,11 +54,22 @@ const Tracking = (): JSX.Element => {
           axios
             .get(live2dModel.physics3, { responseType: "arraybuffer" })
             .then((res) => res.data),
-          ...live2dModel.textures.map(async (texture) => {
-            const res = await axios.get(texture, { responseType: "blob" });
-            return res.data;
-          }),
         ]);
+        const textures = await Promise.all(
+          live2dModel.textures.map(async (texture) => {
+            const res = await axios.get(texture, { responseType: "blob" });
+            return res.data as Blob;
+          })
+        );
+        const motions = await Promise.all(
+          live2dModel.motions.map(async (motion) => {
+            const res = await axios.get(motion, {
+              responseType: "arraybuffer",
+            });
+            return res.data;
+          })
+        );
+        // const motions: Array<ArrayBuffer> = [];
 
         const mod = await live2dRender(
           avatarCanvasRef.current!,
@@ -67,6 +78,7 @@ const Tracking = (): JSX.Element => {
             moc3,
             physics,
             textures,
+            motions,
           },
           {
             autoBlink: true,
