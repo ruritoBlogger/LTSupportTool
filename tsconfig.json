@@ -17,6 +17,9 @@
       ],
       "@libs/*": [
         "./src/libs/*"
+      ],
+      "@config/*": [
+        "./src/config/*"
       ]
     },
     "lib": [

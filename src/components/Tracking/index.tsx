@@ -1,5 +1,5 @@
+import { models } from "@config/model";
 import AppCubismUserModel from "@libs/CubismModel";
-import { models } from "@libs/model";
 import { draw, live2dRender } from "@libs/renderer";
 import { Camera } from "@mediapipe/camera_utils";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
