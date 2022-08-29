@@ -8,14 +8,14 @@
     "build": "next build && next export",
     "build:analyze": "ANALYZE=true next build",
     "start": "next start",
-    "lint": "eslint src/**/*.{ts,tsx}",
-    "lint:fix": "eslint src/**/*.{ts,tsx} --fix",
+    "lint": "eslint -c .eslintrc.json --no-eslintrc src/**/*.{ts,tsx}",
+    "lint:fix": "eslint -c .eslintrc.json --no-eslintrc src/**/*.{ts,tsx} --fix",
     "format": "prettier src/**/*.{ts,tsx}",
     "format:fix": "prettier --write src/**/*.{ts,tsx}"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "eslint src/**/*.{ts,tsx} --fix",
+      "eslint -c .eslintrc.json --no-eslintrc src/**/*.{ts,tsx} --fix",
       "prettier --write src/**/*.{ts,tsx}"
     ]
   },
