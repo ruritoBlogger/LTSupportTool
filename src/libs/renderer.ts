@@ -1,3 +1,7 @@
+import { params } from "@config/params";
+import { Live2DCubismFramework } from "@libs/Framework/src/effect/cubismeyeblink";
+import { Face, TFace, Vector } from "kalidokit";
+
 import AppCubismUserModel from "./CubismModel";
 import {
   CubismFramework,
@@ -5,9 +9,6 @@ import {
   CubismModelSettingJson,
   ICubismModelSetting,
 } from "./Live2dSDK";
-import { Face, TFace, Vector } from "kalidokit";
-import { params } from "@config/params";
-import { Live2DCubismFramework } from "@libs/Framework/src/effect/cubismeyeblink";
 import CubismEyeBlink = Live2DCubismFramework.CubismEyeBlink;
 
 // @url https://zenn.dev/mooriii/articles/f6a2eef484e837
@@ -269,7 +270,7 @@ export const draw = (
       )
     );
 
-    let stabilizedEyes = Face.stabilizeBlink(
+    const stabilizedEyes = Face.stabilizeBlink(
       {
         l: Vector.lerp(
           faceRig.eye.l,

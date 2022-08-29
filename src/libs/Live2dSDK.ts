@@ -48,12 +48,12 @@ class csmVector<T> extends csmvector.csmVector<T> {}
 export {
   ACubismMotion,
   csmVector,
+  CubismExpressionMotion,
   CubismEyeBlink,
   CubismFramework,
   CubismMatrix44,
   CubismModelSettingJson,
   CubismMotion,
-  CubismExpressionMotion,
   CubismMotionManager,
   CubismPhysics,
   CubismUserModel,
