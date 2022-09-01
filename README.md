@@ -25,6 +25,11 @@ $ docker-compose build
 $ docker-compose up -d
 ```
 
+### Live2Dモデルの配置
+
+Live2Dモデルはpublicディレクトリに配置してください。
+その後`src/config/model.ts`にて対応するファイルのパスに書き換えてください
+
 ### 使用技術
 
 `Next.js`を採用しています.  
