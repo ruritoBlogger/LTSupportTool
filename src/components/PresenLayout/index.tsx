@@ -1,31 +1,37 @@
 import { css } from "@emotion/css";
-import { Grid } from "@mui/material";
 
 const PresenLayout = (): JSX.Element => {
   return (
-    <>
-      <Grid container direction={"column"} className={rootStyle}>
-        <Grid container item xs={9}>
-          <Grid item xs={9} className={boxStyle}>
-            <p>プレゼンの部分</p>
-          </Grid>
-          <Grid item xs={3} className={boxStyle}>
-            <p>サイドバーの部分</p>
-          </Grid>
-        </Grid>
-        <Grid item xs={3} className={boxStyle}>
-          <p>下の部分</p>
-        </Grid>
-      </Grid>
-    </>
+    <div className={GridStyle}>
+      <div className={InnerGridStyle}>
+        <Box>
+          <p>プレゼンの部分</p>
+        </Box>
+        <Box>
+          <p>サイドバーの部分</p>
+        </Box>
+      </div>
+      <Box>
+        <p>下の部分</p>
+      </Box>
+    </div>
   );
 };
 
-const rootStyle = css`
+const GridStyle = css`
   && {
-    height: 100%;
     width: 100%;
+    height: 100%;
     background-color: black;
+    display: grid;
+    grid-template-columns: 85% 15%;
+  }
+`;
+
+const InnerGridStyle = css`
+  && {
+    display: grid;
+    grid-template-rows: 70% 30%;
   }
 `;
 
@@ -35,5 +41,9 @@ const boxStyle = css`
     border: 3px solid white;
   }
 `;
+
+const Box = ({ children }: { children: JSX.Element }): JSX.Element => (
+  <div className={boxStyle}>{children}</div>
+);
 
 export default PresenLayout;
