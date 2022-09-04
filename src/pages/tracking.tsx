@@ -22,6 +22,7 @@ const rootStyle = css`
     width: 85vw;
     height: 85vh;
     margin: auto;
+    background-color: white;
   }
 `;
 

@@ -9,7 +9,7 @@ import {
   Results as FaceResult,
 } from "@mediapipe/face_mesh";
 import axios from "axios";
-import { Face } from "kalidokit";
+import * as Kalidokit from "kalidokit";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
@@ -27,7 +27,7 @@ const Tracking = (): JSX.Element => {
     (points: NormalizedLandmarkList) => {
       const videoElement = videoRef.current;
       if (!mod || !points) return;
-      const riggedFace = Face.solve(points, {
+      const riggedFace = Kalidokit.Face.solve(points, {
         runtime: "mediapipe",
         video: videoElement,
       });
@@ -149,7 +149,7 @@ const rootStyle = css`
   && {
     height: 100%;
     width: 100%;
-    background-color: white;
+    background-color: inherit;
   }
 `;
 
