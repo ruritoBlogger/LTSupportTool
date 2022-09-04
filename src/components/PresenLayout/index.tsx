@@ -25,14 +25,15 @@ const GridStyle = css`
     height: 100%;
     background-color: black;
     display: grid;
-    grid-template-columns: 85% 15%;
+    grid-template-rows: 80% 20%;
+    color: white;
   }
 `;
 
 const InnerGridStyle = css`
   && {
     display: grid;
-    grid-template-rows: 70% 30%;
+    grid-template-columns: 65% 35%;
   }
 `;
 
