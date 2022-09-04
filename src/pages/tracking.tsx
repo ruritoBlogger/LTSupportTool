@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { css } from "@emotion/css";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { SWRConfig } from "swr";
@@ -10,11 +10,19 @@ const TrackingComponent = dynamic(() => import("@components/Tracking"), {
 const Tracking: NextPage = () => {
   return (
     <SWRConfig value={{ suspense: true }}>
-      <Container maxWidth={"lg"}>
+      <div className={rootStyle}>
         <TrackingComponent />
-      </Container>
+      </div>
     </SWRConfig>
   );
 };
+
+const rootStyle = css`
+  && {
+    width: 85vw;
+    height: 85vh;
+    margin: auto;
+  }
+`;
 
 export default Tracking;
