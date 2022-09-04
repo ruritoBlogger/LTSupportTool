@@ -7,7 +7,7 @@ const App: NextPage = () => {
   return (
     <SWRConfig value={{ suspense: true }}>
       <div className={rootStyle}>
-        <PresenLayout />
+        <PresenLayout Sidebar={() => <p>サイドバー(予定)</p>} />
       </div>
     </SWRConfig>
   );
