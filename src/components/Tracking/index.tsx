@@ -1,11 +1,10 @@
 import { models } from "@config/model";
+import { css } from "@emotion/css";
 import AppCubismUserModel from "@libs/CubismModel";
 import { draw, live2dRender } from "@libs/renderer";
 import { Camera } from "@mediapipe/camera_utils";
-import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import {
   FaceMesh,
-  FACEMESH_TESSELATION,
   NormalizedLandmarkList,
   Results as FaceResult,
 } from "@mediapipe/face_mesh";
@@ -98,37 +97,12 @@ const Tracking = (): JSX.Element => {
     load();
   }, [load]);
 
-  const drawResults = useCallback((points: NormalizedLandmarkList) => {
-    const videoElement = videoRef.current;
-    const canvasElement = canvasRef.current;
-    if (!canvasElement || !videoElement || !points) return;
-    canvasElement.width = videoElement.videoWidth ?? 500;
-    canvasElement.height = videoElement.videoHeight ?? 300;
-    const canvasCtx = canvasElement.getContext("2d");
-    if (!canvasCtx) return;
-    canvasCtx.save();
-    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-
-    // 用意したcanvasにトラッキングしたデータを表示
-    drawConnectors(canvasCtx, points, FACEMESH_TESSELATION, {
-      color: "#C0C0C070",
-      lineWidth: 1,
-    });
-    if (points && points.length === 478) {
-      drawLandmarks(canvasCtx, [points[468], points[468 + 5]], {
-        color: "#ffe603",
-        lineWidth: 2,
-      });
-    }
-  }, []);
-
   // facemeshから結果が取れたときのコールバック関数
   const onResult = useCallback(
     (results: FaceResult) => {
-      drawResults(results.multiFaceLandmarks[0]);
       animateLive2DModel(results.multiFaceLandmarks[0]);
     },
-    [animateLive2DModel, drawResults]
+    [animateLive2DModel]
   );
 
   useEffect(() => {
@@ -163,40 +137,39 @@ const Tracking = (): JSX.Element => {
   }, [onResult]);
 
   return (
-    <div className="App">
-      <video
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          // カメラの映像が違和感がないように反転
-          transform: "ScaleX(-1)",
-        }}
-        ref={videoRef}
-      />
-      <canvas
-        style={{
-          top: 0,
-          left: 0,
-          position: "absolute",
-          transform: "ScaleX(-1)",
-        }}
-        ref={canvasRef}
-      />
-      <canvas
-        ref={avatarCanvasRef}
-        width={1200}
-        height={720}
-        style={{
-          top: 0,
-          left: 0,
-          position: "absolute",
-          zIndex: 1,
-          backgroundColor: "white",
-        }}
-      />
+    <div className={rootStyle}>
+      <video className={hiddenStyle} ref={videoRef} />
+      <canvas className={hiddenStyle} ref={canvasRef} />
+      <canvas ref={avatarCanvasRef} className={Live2DModelStyle} />
     </div>
   );
 };
+
+const rootStyle = css`
+  && {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+  }
+`;
+
+/**
+ * NOTE:
+ * モデルの描画に必要
+ * ただ画面表示する必要はないため非表示に
+ */
+const hiddenStyle = css`
+  && {
+    position: absolute;
+    opacity: 0;
+  }
+`;
+
+const Live2DModelStyle = css`
+  && {
+    height: 100%;
+    width: 100%;
+  }
+`;
 
 export default Tracking;
