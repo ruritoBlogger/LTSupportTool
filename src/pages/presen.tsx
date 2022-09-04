@@ -8,11 +8,17 @@ const TrackingComponent = dynamic(() => import("@components/Tracking"), {
   ssr: false,
 });
 
+const TimerComponent = dynamic(() => import("@components/Timer"), {
+  ssr: false,
+});
+
 // TODO: コンポーネントとかに切り出したい
 const TrackingLayout = () => {
+  const time = new Date();
+  time.setMinutes(time.getMinutes() + 5);
   return (
     <div className={layoutStyle}>
-      <div />
+      <TimerComponent time={time} />
       <div className={innerLayoutStyle}>
         <TrackingComponent />
       </div>

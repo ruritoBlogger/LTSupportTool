@@ -17,7 +17,9 @@ const PresenLayout = ({ Sidebar }: PresenLayoutProps): JSX.Element => {
         </Box>
       </div>
       <Box>
-        <p>下の部分</p>
+        <div className={innerTextStyle}>
+          <p className={textStyle}>宝くじLT 始まるよ～～～</p>
+        </div>
       </Box>
     </div>
   );
@@ -37,7 +39,7 @@ const GridStyle = css`
 const InnerGridStyle = css`
   && {
     display: grid;
-    grid-template-columns: 65% 35%;
+    grid-template-columns: 75% 25%;
   }
 `;
 
@@ -45,6 +47,20 @@ const boxStyle = css`
   && {
     margin: 3px;
     border: 3px solid white;
+  }
+`;
+
+const innerTextStyle = css`
+  && {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+  }
+`;
+
+const textStyle = css`
+  && {
+    font-size: 40px;
   }
 `;
 
