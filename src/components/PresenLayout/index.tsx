@@ -1,3 +1,4 @@
+import GoogleSlide from "@components/GoogleSlide";
 import { css } from "@emotion/css";
 
 const PresenLayout = (): JSX.Element => {
@@ -5,7 +6,7 @@ const PresenLayout = (): JSX.Element => {
     <div className={GridStyle}>
       <div className={InnerGridStyle}>
         <Box>
-          <p>プレゼンの部分</p>
+          <GoogleSlide />
         </Box>
         <Box>
           <p>サイドバーの部分</p>
