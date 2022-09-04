@@ -160,6 +160,8 @@ const rootStyle = css`
  */
 const hiddenStyle = css`
   && {
+    height: 0;
+    width: 0;
     position: absolute;
     opacity: 0;
   }
