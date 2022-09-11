@@ -23,7 +23,10 @@
       ],
       "@state/*": [
         "./src/state/*"
-        ]
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ]
     },
     "lib": [
       "dom",
