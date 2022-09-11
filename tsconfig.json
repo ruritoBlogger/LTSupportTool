@@ -20,7 +20,10 @@
       ],
       "@config/*": [
         "./src/config/*"
-      ]
+      ],
+      "@state/*": [
+        "./src/state/*"
+        ]
     },
     "lib": [
       "dom",
