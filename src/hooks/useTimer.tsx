@@ -1,7 +1,8 @@
 import { css } from "@emotion/css";
+import { useSWRCountDownApiState } from "@state/useSWRCountDownApiState";
 import { useSWRTimerState } from "@state/useSWRTimerState";
-import React, { useState } from "react";
-import Countdown, { CountdownApi } from "react-countdown";
+import React from "react";
+import Countdown from "react-countdown";
 
 interface UseTimerReturn {
   Timer: () => JSX.Element;
@@ -15,8 +16,8 @@ export const useTimer = (): UseTimerReturn => {
   const nowTime = new Date();
   nowTime.setMinutes(nowTime.getMinutes() + 5);
   const { time: currentTime, setTime } = useSWRTimerState(nowTime);
-  // TODO: APIは複数ページから叩かれるため、SWRで管理する
-  const [countDownApi, setCountDownApi] = useState<CountdownApi | null>(null);
+  const { api: countDownApi, setApi: setCountDownApi } =
+    useSWRCountDownApiState(null);
 
   // @url: https://github.com/ndresx/react-countdown/blob/master/examples/src/CountdownApi.tsx
   const setRef = (countDown: Countdown | null): void => {
