@@ -14,11 +14,9 @@ const TimerComponent = dynamic(() => import("@components/Timer"), {
 
 // TODO: コンポーネントとかに切り出したい
 const TrackingLayout = () => {
-  const time = new Date();
-  time.setMinutes(time.getMinutes() + 5);
   return (
     <div className={layoutStyle}>
-      <TimerComponent time={time} />
+      <TimerComponent />
       <div className={innerLayoutStyle}>
         <TrackingComponent />
       </div>

@@ -1,19 +1,17 @@
 import useSWR from "swr";
 
 interface useSWRTimerStateReturn {
-  time: number;
-  setTime: (newTime: number) => void;
+  time: Date;
+  setTime: (newTime: Date) => void;
 }
 
-export const useSWRTimerState = (
-  initialTime: number
-): useSWRTimerStateReturn => {
+export const useSWRTimerState = (initialTime: Date): useSWRTimerStateReturn => {
   const { data: time, mutate: setTime } = useSWR("timer", null, {
     fallbackData: initialTime,
   });
 
   return {
-    time: time ?? 0,
+    time: time ?? new Date(),
     setTime: setTime,
   };
 };

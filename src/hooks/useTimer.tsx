@@ -10,14 +10,16 @@ interface UseTimerReturn {
   resetTime: () => void;
 }
 
+// TODO: 時刻の設定周りはリファクタしたい
 export const useTimer = (): UseTimerReturn => {
-  const initialTime = 60 * 5;
-  const { time: currentTime, setTime } = useSWRTimerState(initialTime);
+  const nowTime = new Date();
+  nowTime.setMinutes(nowTime.getMinutes() + 5);
+  const { time: currentTime, setTime } = useSWRTimerState(nowTime);
   const [countDownApi, setCountDownApi] = useState<CountdownApi | null>(null);
 
   // @url: https://github.com/ndresx/react-countdown/blob/master/examples/src/CountdownApi.tsx
   const setRef = (countDown: Countdown | null): void => {
-    if (countDown) {
+    if (countDown && !countDownApi) {
       setCountDownApi(countDown.getApi());
     }
   };
@@ -56,7 +58,8 @@ export const useTimer = (): UseTimerReturn => {
 
   const resetTime = (): void => {
     stopTime();
-    setTime(initialTime);
+    nowTime.setMinutes(nowTime.getMinutes() + 5);
+    setTime(nowTime);
   };
 
   return {

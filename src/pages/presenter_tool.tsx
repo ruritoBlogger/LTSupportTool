@@ -1,22 +1,31 @@
 import { css } from "@emotion/css";
+import { useTimer } from "@hooks/useTimer";
 import { Button } from "@mui/material";
 import { NextPage } from "next";
-import { useState } from "react";
 import { SWRConfig } from "swr";
 
 const PresenterToolPage: NextPage = () => {
-  const [message, setMessage] = useState<string>("");
-  // TODO: タイマーをスタートする
-  const handleClick = () => {
-    setMessage("clicked!!!");
+  const { startTime, stopTime, resetTime } = useTimer();
+
+  const handleStartTimerClick = () => {
+    startTime();
+  };
+
+  const handleStopTimerClick = () => {
+    stopTime();
+  };
+
+  const handleResetTimerClick = () => {
+    resetTime();
   };
 
   return (
     <SWRConfig value={{ suspense: true }}>
       <div className={rootStyle}>
         <p>発表者ツール</p>
-        <Button onClick={handleClick}>スタート</Button>
-        <p>{message}</p>
+        <Button onClick={handleStartTimerClick}>スタート</Button>
+        <Button onClick={handleStopTimerClick}>ストップ</Button>
+        <Button onClick={handleResetTimerClick}>リセット</Button>
       </div>
     </SWRConfig>
   );
