@@ -15,6 +15,7 @@ export const useTimer = (): UseTimerReturn => {
   const nowTime = new Date();
   nowTime.setMinutes(nowTime.getMinutes() + 5);
   const { time: currentTime, setTime } = useSWRTimerState(nowTime);
+  // TODO: APIは複数ページから叩かれるため、SWRで管理する
   const [countDownApi, setCountDownApi] = useState<CountdownApi | null>(null);
 
   // @url: https://github.com/ndresx/react-countdown/blob/master/examples/src/CountdownApi.tsx
