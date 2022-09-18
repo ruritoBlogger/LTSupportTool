@@ -1,22 +1,45 @@
 import { css } from "@emotion/css";
-import { useTimer } from "@hooks/useTimer";
 import { Button } from "@mui/material";
 import { NextPage } from "next";
+import { useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 import { SWRConfig } from "swr";
 
 const PresenterToolPage: NextPage = () => {
-  const { startTime, stopTime, resetTime } = useTimer();
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  const initializeSocket = async (): Promise<void> => {
+    await fetch("/api/socket");
+    const generatedSocket = io();
+    setSocket(generatedSocket);
+  };
+
+  useEffect(() => {
+    initializeSocket();
+  }, []);
 
   const handleStartTimerClick = () => {
-    startTime();
+    if (socket) {
+      socket.emit("startTime", true);
+    } else {
+      initializeSocket();
+    }
   };
 
   const handleStopTimerClick = () => {
-    stopTime();
+    if (socket) {
+      socket.emit("stopTime", true);
+    } else {
+      initializeSocket();
+    }
   };
 
   const handleResetTimerClick = () => {
-    resetTime();
+    if (socket) {
+      socket.emit("resetTime", true);
+    } else {
+      initializeSocket();
+    }
   };
 
   return (

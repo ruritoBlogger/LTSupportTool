@@ -21,7 +21,7 @@ export const useTimer = (): UseTimerReturn => {
 
   // @url: https://github.com/ndresx/react-countdown/blob/master/examples/src/CountdownApi.tsx
   const setRef = (countDown: Countdown | null): void => {
-    if (countDown && !countDownApi) {
+    if (countDown) {
       setCountDownApi(countDown.getApi());
     }
   };
@@ -41,15 +41,6 @@ export const useTimer = (): UseTimerReturn => {
     );
   };
 
-  const Timer = (): JSX.Element => (
-    <Countdown
-      ref={setRef}
-      autoStart={false}
-      date={currentTime}
-      renderer={rerender}
-    />
-  );
-
   const startTime = (): void => {
     countDownApi && countDownApi.start();
   };
@@ -63,6 +54,18 @@ export const useTimer = (): UseTimerReturn => {
     nowTime.setMinutes(nowTime.getMinutes() + 5);
     setTime(nowTime);
   };
+
+  const Timer = (): JSX.Element => (
+    <>
+      <Countdown
+        ref={setRef}
+        autoStart={false}
+        date={currentTime}
+        renderer={rerender}
+      />
+      <button onClick={startTime}>test</button>
+    </>
+  );
 
   return {
     Timer: Timer,
