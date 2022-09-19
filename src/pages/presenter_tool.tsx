@@ -5,13 +5,16 @@ import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { SWRConfig } from "swr";
 
-const PresenterToolPage: NextPage = () => {
-  const [socket, setSocket] = useState<Socket | null>(null);
+let socket: Socket | null = null;
 
+const PresenterToolPage: NextPage = () => {
   const initializeSocket = async (): Promise<void> => {
+    if (socket) {
+      return;
+    }
+
     await fetch("/api/socket");
-    const generatedSocket = io();
-    setSocket(generatedSocket);
+    socket = io();
   };
 
   useEffect(() => {
@@ -21,24 +24,18 @@ const PresenterToolPage: NextPage = () => {
   const handleStartTimerClick = () => {
     if (socket) {
       socket.emit("startTime", true);
-    } else {
-      initializeSocket();
     }
   };
 
   const handleStopTimerClick = () => {
     if (socket) {
       socket.emit("stopTime", true);
-    } else {
-      initializeSocket();
     }
   };
 
   const handleResetTimerClick = () => {
     if (socket) {
       socket.emit("resetTime", true);
-    } else {
-      initializeSocket();
     }
   };
 

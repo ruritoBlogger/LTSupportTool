@@ -11,12 +11,10 @@ interface UseTimerReturn {
 
 // TODO: 時刻の設定周りはリファクタしたい
 export const useTimer = (): UseTimerReturn => {
-  const nowTime = new Date();
-  nowTime.setMinutes(nowTime.getMinutes() + 5);
   const {
     time: { minutes, seconds },
     start,
-  } = useCountdown(nowTime.getTime());
+  } = useCountdown(5);
 
   const Timer = (): JSX.Element => (
     <>

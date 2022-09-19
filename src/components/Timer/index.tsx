@@ -1,31 +1,34 @@
 import { css } from "@emotion/css";
 import { useTimer } from "@hooks/useTimer";
-import React, { useEffect } from "react";
-import { io } from "socket.io-client";
+import React from "react";
+import { io, Socket } from "socket.io-client";
+
+let socket: Socket | null = null;
 
 const Timer = (): JSX.Element => {
   const { Timer: Countdown, startTime, stopTime, resetTime } = useTimer();
 
   const initializeSocket = async (): Promise<void> => {
-    await fetch("/api/socket");
-    const generatedSocket = io();
+    if (socket) {
+      return;
+    }
 
-    generatedSocket.on("listenStart", () => {
+    socket = io();
+
+    socket.on("listenStart", () => {
       startTime();
     });
 
-    generatedSocket.on("listenStop", () => {
+    socket.on("listenStop", () => {
       stopTime();
     });
 
-    generatedSocket.on("listenReset", () => {
+    socket.on("listenReset", () => {
       resetTime();
     });
   };
 
-  useEffect(() => {
-    initializeSocket();
-  }, []);
+  initializeSocket();
 
   return (
     <div className={rootStyle}>

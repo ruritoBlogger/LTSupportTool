@@ -7,7 +7,7 @@ const Handler = (req: NextApiRequest, res: NextApiResponse<string>) => {
     res.socket.server.io = io;
   }
 
-  res.socket.server.io.on("connect", (socket) => {
+  res.socket.server.io.on("connection", (socket) => {
     socket.on("startTime", (_msg) => {
       socket.broadcast.emit("listenStart", true);
     });
