@@ -15,6 +15,7 @@ export const useTimer = (): UseTimerReturn => {
     time: { minutes, seconds },
     start,
     stop,
+    reset,
   } = useCountdown(5);
 
   const Timer = (): JSX.Element => (
@@ -30,9 +31,7 @@ export const useTimer = (): UseTimerReturn => {
     Timer: Timer,
     startTime: start,
     stopTime: stop,
-    resetTime: () => {
-      return;
-    },
+    resetTime: reset,
   };
 };
 

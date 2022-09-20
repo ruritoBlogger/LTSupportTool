@@ -47,6 +47,18 @@ export const useCountdown = (goalMinutes: number): useCountdownReturn => {
     }
   };
 
+  const reset = (): void => {
+    if (currentInterval) {
+      clearInterval(currentInterval);
+      setCurrentInterval(null);
+    }
+    if (currentTimeout) {
+      clearTimeout(currentTimeout);
+      setCurrentTimeout(null);
+    }
+    setCountDown(goalMinutes * 60 * 1000);
+  };
+
   return {
     time: {
       minutes: minutes,
@@ -54,8 +66,6 @@ export const useCountdown = (goalMinutes: number): useCountdownReturn => {
     },
     start: start,
     stop: stop,
-    reset: () => {
-      return;
-    },
+    reset: reset,
   };
 };
