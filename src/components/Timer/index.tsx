@@ -1,19 +1,13 @@
 import { css } from "@emotion/css";
 import { useTimer } from "@hooks/useTimer";
-import React from "react";
-import { io, Socket } from "socket.io-client";
-
-let socket: Socket | null = null;
+import React, { useEffect } from "react";
+import { io } from "socket.io-client";
 
 const Timer = (): JSX.Element => {
   const { Timer: Countdown, startTime, stopTime, resetTime } = useTimer();
 
-  const initializeSocket = async (): Promise<void> => {
-    if (socket) {
-      return;
-    }
-
-    socket = io();
+  useEffect(() => {
+    const socket = io();
 
     socket.on("listenStart", () => {
       startTime();
@@ -26,9 +20,11 @@ const Timer = (): JSX.Element => {
     socket.on("listenReset", () => {
       resetTime();
     });
-  };
 
-  initializeSocket();
+    return function cleanup() {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <div className={rootStyle}>

@@ -3,12 +3,9 @@ import { css } from "@emotion/css";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { SWRConfig } from "swr";
+import Timer from "@components/Timer";
 
 const TrackingComponent = dynamic(() => import("@components/Tracking"), {
-  ssr: false,
-});
-
-const TimerComponent = dynamic(() => import("@components/Timer"), {
   ssr: false,
 });
 
@@ -16,7 +13,7 @@ const TimerComponent = dynamic(() => import("@components/Timer"), {
 const TrackingLayout = () => {
   return (
     <div className={layoutStyle}>
-      <TimerComponent />
+      <Timer />
       <div className={innerLayoutStyle}>
         <TrackingComponent />
       </div>
