@@ -25,7 +25,7 @@ const PresenterToolPage: NextPage = () => {
   };
 
   const handleStopTimerClick = () => {
-    if (socket && isStart) {
+    if (socket) {
       socket.emit("stopTime", true);
       setIsStart(false);
     }

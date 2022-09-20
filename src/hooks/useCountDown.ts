@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { clearInterval } from "timers";
 
 interface useCountdownReturn {
   time: {
@@ -15,26 +14,37 @@ export const useCountdown = (goalMinutes: number): useCountdownReturn => {
   const [currentInterval, setCurrentInterval] = useState<NodeJS.Timer | null>(
     null
   );
-  const [_, setCurrentTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [currentTimeout, setCurrentTimeout] = useState<NodeJS.Timeout | null>(
+    null
+  );
   const [countDown, setCountDown] = useState<number>(goalMinutes * 60 * 1000);
 
   const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
 
   const start = (): void => {
-    setCurrentInterval(
-      setInterval(() => {
-        setCountDown((current) => current - 1000);
-      }, 1000)
-    );
+    const interval = setInterval(() => {
+      setCountDown((current) => current - 1000);
+    }, 1000);
+    setCurrentInterval(interval);
 
-    setCurrentTimeout(
-      setTimeout(() => {
-        if (currentInterval) {
-          clearInterval(currentInterval);
-        }
-      }, minutes * 60 * 1000 + seconds * 1000)
-    );
+    const timeout = setTimeout(() => {
+      if (currentInterval) {
+        clearInterval(currentInterval);
+      }
+    }, minutes * 60 * 1000 + seconds * 1000);
+    setCurrentTimeout(timeout);
+  };
+
+  const stop = (): void => {
+    if (currentInterval) {
+      clearInterval(currentInterval);
+      setCurrentInterval(null);
+    }
+    if (currentTimeout) {
+      clearTimeout(currentTimeout);
+      setCurrentTimeout(null);
+    }
   };
 
   return {
@@ -43,9 +53,7 @@ export const useCountdown = (goalMinutes: number): useCountdownReturn => {
       seconds: seconds,
     },
     start: start,
-    stop: () => {
-      return;
-    },
+    stop: stop,
     reset: () => {
       return;
     },

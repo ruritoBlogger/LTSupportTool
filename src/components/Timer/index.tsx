@@ -24,7 +24,7 @@ const Timer = (): JSX.Element => {
     return function cleanup() {
       socket.disconnect();
     };
-  }, []);
+  }, [startTime, stopTime, resetTime]);
 
   return (
     <div className={rootStyle}>
