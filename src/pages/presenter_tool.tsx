@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { SWRConfig } from "swr";
+import GoogleSlideForm from "@components/GoogleSlideForm";
 
 const PresenterToolPage: NextPage = () => {
   const [isStart, setIsStart] = useState<boolean>(false);
@@ -45,6 +46,7 @@ const PresenterToolPage: NextPage = () => {
         <Button onClick={handleStartTimerClick}>スタート</Button>
         <Button onClick={handleStopTimerClick}>ストップ</Button>
         <Button onClick={handleResetTimerClick}>リセット</Button>
+        <GoogleSlideForm />
       </div>
     </SWRConfig>
   );
