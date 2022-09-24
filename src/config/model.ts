@@ -6,20 +6,15 @@ export interface Model {
   model3: string;
   physics3: string;
   textures: string[];
-  motions: string[];
 }
+
+const baseDir = "/hiyori_free_jp/runtime/";
 
 export const models: Models = {
   model: {
-    moc3: `/kasukabe/kasukabe.moc3`,
-    model3: `/kasukabe/kasukabe.model3.json`,
-    physics3: `/kasukabe/kasukabe.physics3.json`,
-    textures: [
-      `/kasukabe/kasukabe.2048/texture_00.png`,
-      `/kasukabe/kasukabe.2048/texture_01.png`,
-      `/kasukabe/kasukabe.2048/texture_02.png`,
-    ],
-    // motions: [`/kasukabe/照れ.exp3.json`],
-    motions: [`/kasukabe/がーん.exp3.json`],
+    moc3: baseDir + "hiyori_free_t08.moc3",
+    model3: baseDir + "hiyori_free_t08.model3.json",
+    physics3: baseDir + "hiyori_free_t08.physics3.json",
+    textures: [baseDir + "hiyori_free_t08.2048/texture_00.png"],
   },
 };

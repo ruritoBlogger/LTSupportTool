@@ -33,7 +33,7 @@ const Tracking = (): JSX.Element => {
       });
 
       const lastUpdateTime = Date.now();
-      draw(avatarCanvasRef.current!, lastUpdateTime, mod, riggedFace, 0);
+      draw(avatarCanvasRef.current!, lastUpdateTime, mod, riggedFace, 1);
     },
     [mod]
   );
@@ -60,15 +60,6 @@ const Tracking = (): JSX.Element => {
             return res.data as Blob;
           })
         );
-        const motions = await Promise.all(
-          live2dModel.motions.map(async (motion) => {
-            const res = await axios.get(motion, {
-              responseType: "arraybuffer",
-            });
-            return res.data;
-          })
-        );
-        // const motions: Array<ArrayBuffer> = [];
 
         const mod = await live2dRender(
           avatarCanvasRef.current!,
@@ -77,7 +68,6 @@ const Tracking = (): JSX.Element => {
             moc3,
             physics,
             textures,
-            motions,
           },
           {
             autoBlink: true,

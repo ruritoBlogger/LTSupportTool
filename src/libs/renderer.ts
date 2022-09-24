@@ -15,7 +15,6 @@ import CubismEyeBlink = Live2DCubismFramework.CubismEyeBlink;
 export interface AvatarArrayBuffers {
   moc3: ArrayBuffer;
   textures: Blob[];
-  motions: Array<ArrayBuffer>;
   physics: ArrayBuffer;
 }
 interface Live2dRendererOption {
@@ -72,7 +71,6 @@ export async function live2dRender(
   const {
     moc3: moc3ArrayBuffer,
     textures,
-    motions,
     physics: physics3ArrayBuffer,
   } = buffers;
 
@@ -84,9 +82,6 @@ export async function live2dRender(
     const texture = await createTexture(buffer, gl);
     model.getRenderer().bindTexture(i, texture);
     i++;
-  }
-  for (const buffer of motions) {
-    model.addExpressionMotion(buffer, "test");
   }
   model.getRenderer().setIsPremultipliedAlpha(true);
   model.getRenderer().startUp(gl);
@@ -317,16 +312,6 @@ export const draw = (
   _model.saveParameters();
   // // 頂点の更新
   model.update(deltaTimeSecond);
-
-  if (model.isMotionFinished) {
-    const idx = Math.floor(Math.random() * model.motionNames.length);
-    const name = model.motionNames[idx];
-    model.startMotionByName(name);
-  }
-
-  if (model.isExpressionFinished) {
-    model.startExpressionByName("test");
-  }
 
   viewport[2] = canvas.width;
   viewport[3] = canvas.height;
