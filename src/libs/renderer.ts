@@ -120,9 +120,7 @@ export async function live2dRender(
     modelMatrix.translateRelative(defaultPosition.x, defaultPosition.y);
 
     projectionMatrix.multiplyByMatrix(modelMatrix);
-    const scale = 2;
-    projectionMatrix.scaleRelative(scale, scale);
-    projectionMatrix.translateY(-1.0);
+    projectionMatrix.scaleRelative(option.scale, option.scale);
     model.getRenderer().setMvpMatrix(projectionMatrix);
   };
   resizeModel();

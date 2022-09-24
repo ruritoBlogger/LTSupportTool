@@ -72,8 +72,8 @@ const Tracking = (): JSX.Element => {
           {
             autoBlink: true,
             x: 0,
-            y: 0,
-            scale: 4,
+            y: -0.3,
+            scale: 3.5,
           }
         );
         setMod(mod);
