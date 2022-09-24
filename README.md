@@ -1,4 +1,10 @@
-## LTSupportTool
+# LTSupportTool
+
+![image](/public/LTSupportTool.gif)
+
+> 上記画像では, Live2D社が配布している桃瀬ひよりさんを使用させていただきました
+
+### 概要
 
 LTのサポートを行うツールです
 
