@@ -56,7 +56,7 @@
     "axios": "0.27.2",
     "kalidokit": "1.1.5",
     "next": "12.2.5",
-    "pixi.js": "^6.5.4",
+    "pixi.js": "6.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "7.36.0",
