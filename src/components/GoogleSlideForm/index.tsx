@@ -1,7 +1,12 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, TextField } from "@mui/material";
+
+interface FormInput {
+  url: string;
+}
 
 const schema = z.object({
   url: z.string().url({
@@ -12,20 +17,22 @@ const schema = z.object({
 
 const GoogleSlideForm = (): JSX.Element => {
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(schema) });
-  const onSubmit = (data) => console.log(data);
+  } = useForm<FormInput>({ resolver: zodResolver(schema) });
+  const onSubmit: SubmitHandler<FormInput> = (data) => console.log(data);
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register("url")} />
-        {/* FIXME: asで握り潰すのは良くないので何とかしたい */}
-        {errors.url?.message && <p>{errors.url?.message as string}</p>}
-        <input type="submit" />
-      </form>
+      <Controller
+        name={"url"}
+        control={control}
+        render={({ field }) => <TextField {...field} />}
+      />
+      {/* FIXME: asで握り潰すのは良くないので何とかしたい */}
+      {errors.url?.message && <p>{errors.url?.message as string}</p>}
+      <Button onClick={handleSubmit(onSubmit)}>スライドを変更</Button>
     </>
   );
 };
