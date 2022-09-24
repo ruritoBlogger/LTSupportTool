@@ -4,6 +4,8 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { SWRConfig } from "swr";
 import Timer from "@components/Timer";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 const TrackingComponent = dynamic(() => import("@components/Tracking"), {
   ssr: false,
@@ -22,10 +24,20 @@ const TrackingLayout = () => {
 };
 
 const PresenPage: NextPage = () => {
+  const [url, setUrl] = useState<string>("");
+
+  useEffect(() => {
+    const socket = io();
+
+    socket.on("listenSlideURL", (msg) => {
+      setUrl(msg);
+    });
+  }, [setUrl]);
+
   return (
     <SWRConfig value={{ suspense: true }}>
       <div className={rootStyle}>
-        <PresenLayout Sidebar={TrackingLayout} />
+        <PresenLayout Sidebar={TrackingLayout} url={url} />
       </div>
     </SWRConfig>
   );

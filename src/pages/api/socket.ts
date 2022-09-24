@@ -17,6 +17,9 @@ const Handler = (req: NextApiRequest, res: NextApiResponse<string>) => {
     socket.on("resetTime", (_msg) => {
       socket.broadcast.emit("listenReset", true);
     });
+    socket.on("slideURL", (msg) => {
+      socket.broadcast.emit("listenSlideURL", msg);
+    });
   });
   res.end();
 };

@@ -39,6 +39,12 @@ const PresenterToolPage: NextPage = () => {
     }
   };
 
+  const handleURLFormSubmit = (url: string) => {
+    if (socket) {
+      socket.emit("slideURL", url);
+    }
+  };
+
   return (
     <SWRConfig value={{ suspense: true }}>
       <div className={rootStyle}>
@@ -46,7 +52,7 @@ const PresenterToolPage: NextPage = () => {
         <Button onClick={handleStartTimerClick}>スタート</Button>
         <Button onClick={handleStopTimerClick}>ストップ</Button>
         <Button onClick={handleResetTimerClick}>リセット</Button>
-        <GoogleSlideForm />
+        <GoogleSlideForm onSubmit={handleURLFormSubmit} />
       </div>
     </SWRConfig>
   );

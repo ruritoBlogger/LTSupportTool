@@ -3,14 +3,15 @@ import { css } from "@emotion/css";
 
 interface PresenLayoutProps {
   Sidebar: () => JSX.Element;
+  url: string;
 }
 
-const PresenLayout = ({ Sidebar }: PresenLayoutProps): JSX.Element => {
+const PresenLayout = ({ Sidebar, url }: PresenLayoutProps): JSX.Element => {
   return (
     <div className={GridStyle}>
       <div className={InnerGridStyle}>
         <Box>
-          <GoogleSlide />
+          <GoogleSlide url={url} />
         </Box>
         <Box>
           <Sidebar />

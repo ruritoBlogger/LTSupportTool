@@ -4,6 +4,10 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, TextField } from "@mui/material";
 
+interface GoogleSlideFormInput {
+  onSubmit: (url: string) => void;
+}
+
 interface FormInput {
   url: string;
 }
@@ -15,13 +19,13 @@ const schema = z.object({
   }),
 });
 
-const GoogleSlideForm = (): JSX.Element => {
+const GoogleSlideForm = ({ onSubmit }: GoogleSlideFormInput): JSX.Element => {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormInput>({ resolver: zodResolver(schema) });
-  const onSubmit: SubmitHandler<FormInput> = (data) => console.log(data);
+  const submitHandler: SubmitHandler<FormInput> = (data) => onSubmit(data.url);
 
   return (
     <>
@@ -32,7 +36,7 @@ const GoogleSlideForm = (): JSX.Element => {
       />
       {/* FIXME: asで握り潰すのは良くないので何とかしたい */}
       {errors.url?.message && <p>{errors.url?.message as string}</p>}
-      <Button onClick={handleSubmit(onSubmit)}>スライドを変更</Button>
+      <Button onClick={handleSubmit(submitHandler)}>スライドを変更</Button>
     </>
   );
 };
