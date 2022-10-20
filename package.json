@@ -48,7 +48,7 @@
     "@emotion/react": "11.10.4",
     "@emotion/server": "11.10.0",
     "@emotion/styled": "11.10.4",
-    "@hookform/resolvers": "2.9.8",
+    "@hookform/resolvers": "2.9.10",
     "@mediapipe/camera_utils": "0.3.1640029074",
     "@mediapipe/drawing_utils": "0.3.1620248257",
     "@mediapipe/face_mesh": "0.4.1633559619",
