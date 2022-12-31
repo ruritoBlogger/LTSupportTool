@@ -289,6 +289,11 @@
   resolved "https://registry.yarnpkg.com/@mediapipe/face_mesh/-/face_mesh-0.4.1633559619.tgz#f917e4448e25bc375a905d1d910f1bca450c5e23"
   integrity sha512-Vc8cdjxS5+O2gnjWH9KncYpUCVXT0h714KlWAsyqJvJbIgUJBqpppbIx8yWcAzBDxm/5cYSuBI5p5ySIPxzcEg==
 
+"@mediapipe/holistic@^0.5.1635989137":
+  version "0.5.1635989137"
+  resolved "https://registry.yarnpkg.com/@mediapipe/holistic/-/holistic-0.5.1635989137.tgz#68a2af45056f1f9bfa9bcf8a5b28a66a0ec56161"
+  integrity sha512-iY1bOZ4QUR1jBwJzmaQI6u3BZLYfOTAdj2S8EgXPp/ngGtcyNN3oaVH3eTGUBzYsBd/MXG1RmDzBPd9e9DyKJw==
+
 "@mui/base@5.0.0-alpha.109":
   version "5.0.0-alpha.109"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-alpha.109.tgz#a536c5c03196ade78681166e750eb44f5682937d"

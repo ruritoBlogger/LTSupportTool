@@ -53,6 +53,7 @@
     "@mediapipe/camera_utils": "0.3.1640029074",
     "@mediapipe/drawing_utils": "0.3.1620248257",
     "@mediapipe/face_mesh": "0.4.1633559619",
+    "@mediapipe/holistic": "^0.5.1635989137",
     "@mui/material": "5.10.17",
     "@pixiv/three-vrm": "^0.6.7",
     "axios": "0.27.2",
