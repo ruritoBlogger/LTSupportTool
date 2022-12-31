@@ -23,7 +23,6 @@ const lerp = Kalidokit.Vector.lerp;
 
 const Sample = (): JSX.Element => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   /* THREEJS WORLD SETUP */
   let currentVrm;
@@ -387,9 +386,8 @@ const Sample = (): JSX.Element => {
   }, [onResults]);
 
   return (
-    <div css={rootStyle}>
-      <video ref={videoRef} css={hiddenStyle}></video>
-      <canvas ref={canvasRef} css={hiddenStyle}></canvas>
+    <div className={rootStyle}>
+      <video ref={videoRef} className={hiddenStyle}></video>
     </div>
   );
 };
