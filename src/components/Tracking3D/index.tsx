@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Clock,
   DirectionalLight,
@@ -9,26 +9,28 @@ import {
 } from "three";
 import { css } from "@emotion/css";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { VRM, VRMSchema, VRMUtils } from "@pixiv/three-vrm";
+import { VRM, VRMUtils } from "@pixiv/three-vrm";
 import React from "react";
 import { Camera } from "@mediapipe/camera_utils";
 import * as Kalidokit from "kalidokit";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Holistic } from "@mediapipe/holistic";
-import { rigPosition, rigRotation } from "@components/Tracking3D/helper";
+import {
+  rigFace,
+  rigPosition,
+  rigRotation,
+} from "@components/Tracking3D/helper";
 
 const clamp = Kalidokit.Utils.clamp;
 const lerp = Kalidokit.Vector.lerp;
 
 const Sample = (): JSX.Element => {
+  const [mod, setMod] = useState<VRM | null>(null);
+  const [oldLookTarget, _] = useState<Euler>(new Euler());
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  /* THREEJS WORLD SETUP */
-  let currentVrm;
 
   // renderer
   const renderer = new WebGLRenderer({ alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
 
@@ -61,105 +63,42 @@ const Sample = (): JSX.Element => {
   function animate() {
     requestAnimationFrame(animate);
 
-    if (currentVrm) {
+    if (mod) {
       // Update model to render physics
-      currentVrm.update(clock.getDelta());
+      mod.update(clock.getDelta());
     }
     renderer.render(scene, orbitCamera);
   }
   animate();
 
-  /* VRM CHARACTER SETUP */
+  useEffect(() => {
+    // Import Character VRM
+    const loader = new GLTFLoader();
+    loader.crossOrigin = "anonymous";
+    // Import model from URL, add your own model here
+    loader.load(
+      "https://cdn.glitch.com/29e07830-2317-4b15-a044-135e73c7f840%2FAshtra.vrm?v=1630342336981",
 
-  // Import Character VRM
-  const loader = new GLTFLoader();
-  loader.crossOrigin = "anonymous";
-  // Import model from URL, add your own model here
-  loader.load(
-    "https://cdn.glitch.com/29e07830-2317-4b15-a044-135e73c7f840%2FAshtra.vrm?v=1630342336981",
+      (gltf) => {
+        VRMUtils.removeUnnecessaryJoints(gltf.scene);
 
-    (gltf) => {
-      VRMUtils.removeUnnecessaryJoints(gltf.scene);
+        VRM.from(gltf).then((vrm) => {
+          scene.add(vrm.scene);
+          vrm.scene.rotation.y = Math.PI; // Rotate model 180deg to face camera
+          setMod(vrm);
+        });
+      },
 
-      VRM.from(gltf).then((vrm) => {
-        scene.add(vrm.scene);
-        currentVrm = vrm;
-        currentVrm.scene.rotation.y = Math.PI; // Rotate model 180deg to face camera
-      });
-    },
+      (progress) =>
+        console.log(
+          "Loading model...",
+          100.0 * (progress.loaded / progress.total),
+          "%"
+        ),
 
-    (progress) =>
-      console.log(
-        "Loading model...",
-        100.0 * (progress.loaded / progress.total),
-        "%"
-      ),
-
-    (error) => console.error(error)
-  );
-
-  let oldLookTarget = new Euler();
-  const rigFace = (riggedFace) => {
-    if (!currentVrm) {
-      return;
-    }
-    rigRotation("Neck", currentVrm, riggedFace.head, 0.7);
-
-    // Blendshapes and Preset Name Schema
-    const Blendshape = currentVrm.blendShapeProxy;
-    const PresetName = VRMSchema.BlendShapePresetName;
-
-    // Simple example without winking. Interpolate based on old blendshape, then stabilize blink with `Kalidokit` helper function.
-    // for VRM, 1 is closed, 0 is open.
-    riggedFace.eye.l = lerp(
-      clamp(1 - riggedFace.eye.l, 0, 1),
-      Blendshape.getValue(PresetName.Blink),
-      0.5
+      (error) => console.error(error)
     );
-    riggedFace.eye.r = lerp(
-      clamp(1 - riggedFace.eye.r, 0, 1),
-      Blendshape.getValue(PresetName.Blink),
-      0.5
-    );
-    riggedFace.eye = Kalidokit.Face.stabilizeBlink(
-      riggedFace.eye,
-      riggedFace.head.y
-    );
-    Blendshape.setValue(PresetName.Blink, riggedFace.eye.l);
-
-    // Interpolate and set mouth blendshapes
-    Blendshape.setValue(
-      PresetName.I,
-      lerp(riggedFace.mouth.shape.I, Blendshape.getValue(PresetName.I), 0.5)
-    );
-    Blendshape.setValue(
-      PresetName.A,
-      lerp(riggedFace.mouth.shape.A, Blendshape.getValue(PresetName.A), 0.5)
-    );
-    Blendshape.setValue(
-      PresetName.E,
-      lerp(riggedFace.mouth.shape.E, Blendshape.getValue(PresetName.E), 0.5)
-    );
-    Blendshape.setValue(
-      PresetName.O,
-      lerp(riggedFace.mouth.shape.O, Blendshape.getValue(PresetName.O), 0.5)
-    );
-    Blendshape.setValue(
-      PresetName.U,
-      lerp(riggedFace.mouth.shape.U, Blendshape.getValue(PresetName.U), 0.5)
-    );
-
-    //PUPILS
-    //interpolate pupil and keep a copy of the value
-    let lookTarget = new Euler(
-      lerp(oldLookTarget.x, riggedFace.pupil.y, 0.4),
-      lerp(oldLookTarget.y, riggedFace.pupil.x, 0.4),
-      0,
-      "XYZ"
-    );
-    oldLookTarget.copy(lookTarget);
-    currentVrm.lookAt.applyer.lookAt(lookTarget);
-  };
+  }, []);
 
   /* VRM Character Animator */
   const animateVRM = (vrm, results) => {
@@ -185,7 +124,7 @@ const Sample = (): JSX.Element => {
         runtime: "mediapipe",
         video: videoElement,
       });
-      rigFace(riggedFace);
+      rigFace(riggedFace, mod, oldLookTarget);
     }
 
     // Animate Pose
@@ -194,10 +133,10 @@ const Sample = (): JSX.Element => {
         runtime: "mediapipe",
         video: videoElement,
       });
-      rigRotation("Hips", currentVrm, riggedPose.Hips.rotation, 0.7);
+      rigRotation("Hips", mod, riggedPose.Hips.rotation, 0.7);
       rigPosition(
         "Hips",
-        currentVrm,
+        mod,
         {
           x: -riggedPose.Hips.position.x, // Reverse direction
           y: riggedPose.Hips.position.y + 1, // Add a bit of height
@@ -207,214 +146,130 @@ const Sample = (): JSX.Element => {
         0.07
       );
 
-      rigRotation("Chest", currentVrm, riggedPose.Spine, 0.25, 0.3);
-      rigRotation("Spine", currentVrm, riggedPose.Spine, 0.45, 0.3);
+      rigRotation("Chest", mod, riggedPose.Spine, 0.25, 0.3);
+      rigRotation("Spine", mod, riggedPose.Spine, 0.45, 0.3);
 
-      rigRotation(
-        "RightUpperArm",
-        currentVrm,
-        riggedPose.RightUpperArm,
-        1,
-        0.3
-      );
-      rigRotation(
-        "RightLowerArm",
-        currentVrm,
-        riggedPose.RightLowerArm,
-        1,
-        0.3
-      );
-      rigRotation("LeftUpperArm", currentVrm, riggedPose.LeftUpperArm, 1, 0.3);
-      rigRotation("LeftLowerArm", currentVrm, riggedPose.LeftLowerArm, 1, 0.3);
+      rigRotation("RightUpperArm", mod, riggedPose.RightUpperArm, 1, 0.3);
+      rigRotation("RightLowerArm", mod, riggedPose.RightLowerArm, 1, 0.3);
+      rigRotation("LeftUpperArm", mod, riggedPose.LeftUpperArm, 1, 0.3);
+      rigRotation("LeftLowerArm", mod, riggedPose.LeftLowerArm, 1, 0.3);
 
-      rigRotation("LeftUpperLeg", currentVrm, riggedPose.LeftUpperLeg, 1, 0.3);
-      rigRotation("LeftLowerLeg", currentVrm, riggedPose.LeftLowerLeg, 1, 0.3);
-      rigRotation(
-        "RightUpperLeg",
-        currentVrm,
-        riggedPose.RightUpperLeg,
-        1,
-        0.3
-      );
-      rigRotation(
-        "RightLowerLeg",
-        currentVrm,
-        riggedPose.RightLowerLeg,
-        1,
-        0.3
-      );
+      rigRotation("LeftUpperLeg", mod, riggedPose.LeftUpperLeg, 1, 0.3);
+      rigRotation("LeftLowerLeg", mod, riggedPose.LeftLowerLeg, 1, 0.3);
+      rigRotation("RightUpperLeg", mod, riggedPose.RightUpperLeg, 1, 0.3);
+      rigRotation("RightLowerLeg", mod, riggedPose.RightLowerLeg, 1, 0.3);
     }
 
     // Animate Hands
     if (leftHandLandmarks) {
       riggedLeftHand = Kalidokit.Hand.solve(leftHandLandmarks, "Left");
-      rigRotation("LeftHand", currentVrm, {
+      rigRotation("LeftHand", mod, {
         // Combine pose rotation Z and hand rotation X Y
         z: riggedPose.LeftHand.z,
         y: riggedLeftHand.LeftWrist.y,
         x: riggedLeftHand.LeftWrist.x,
       });
-      rigRotation(
-        "LeftRingProximal",
-        currentVrm,
-        riggedLeftHand.LeftRingProximal
-      );
+      rigRotation("LeftRingProximal", mod, riggedLeftHand.LeftRingProximal);
       rigRotation(
         "LeftRingIntermediate",
-        currentVrm,
+        mod,
         riggedLeftHand.LeftRingIntermediate
       );
-      rigRotation("LeftRingDistal", currentVrm, riggedLeftHand.LeftRingDistal);
-      rigRotation(
-        "LeftIndexProximal",
-        currentVrm,
-        riggedLeftHand.LeftIndexProximal
-      );
+      rigRotation("LeftRingDistal", mod, riggedLeftHand.LeftRingDistal);
+      rigRotation("LeftIndexProximal", mod, riggedLeftHand.LeftIndexProximal);
       rigRotation(
         "LeftIndexIntermediate",
-        currentVrm,
+        mod,
         riggedLeftHand.LeftIndexIntermediate
       );
-      rigRotation(
-        "LeftIndexDistal",
-        currentVrm,
-        riggedLeftHand.LeftIndexDistal
-      );
-      rigRotation(
-        "LeftMiddleProximal",
-        currentVrm,
-        riggedLeftHand.LeftMiddleProximal
-      );
+      rigRotation("LeftIndexDistal", mod, riggedLeftHand.LeftIndexDistal);
+      rigRotation("LeftMiddleProximal", mod, riggedLeftHand.LeftMiddleProximal);
       rigRotation(
         "LeftMiddleIntermediate",
-        currentVrm,
+        mod,
         riggedLeftHand.LeftMiddleIntermediate
       );
-      rigRotation(
-        "LeftMiddleDistal",
-        currentVrm,
-        riggedLeftHand.LeftMiddleDistal
-      );
-      rigRotation(
-        "LeftThumbProximal",
-        currentVrm,
-        riggedLeftHand.LeftThumbProximal
-      );
+      rigRotation("LeftMiddleDistal", mod, riggedLeftHand.LeftMiddleDistal);
+      rigRotation("LeftThumbProximal", mod, riggedLeftHand.LeftThumbProximal);
       rigRotation(
         "LeftThumbIntermediate",
-        currentVrm,
+        mod,
         riggedLeftHand.LeftThumbIntermediate
       );
-      rigRotation(
-        "LeftThumbDistal",
-        currentVrm,
-        riggedLeftHand.LeftThumbDistal
-      );
-      rigRotation(
-        "LeftLittleProximal",
-        currentVrm,
-        riggedLeftHand.LeftLittleProximal
-      );
+      rigRotation("LeftThumbDistal", mod, riggedLeftHand.LeftThumbDistal);
+      rigRotation("LeftLittleProximal", mod, riggedLeftHand.LeftLittleProximal);
       rigRotation(
         "LeftLittleIntermediate",
-        currentVrm,
+        mod,
         riggedLeftHand.LeftLittleIntermediate
       );
-      rigRotation(
-        "LeftLittleDistal",
-        currentVrm,
-        riggedLeftHand.LeftLittleDistal
-      );
+      rigRotation("LeftLittleDistal", mod, riggedLeftHand.LeftLittleDistal);
     }
     if (rightHandLandmarks) {
       riggedRightHand = Kalidokit.Hand.solve(rightHandLandmarks, "Right");
-      rigRotation("RightHand", currentVrm, {
+      rigRotation("RightHand", mod, {
         // Combine Z axis from pose hand and X/Y axis from hand wrist rotation
         z: riggedPose.RightHand.z,
         y: riggedRightHand.RightWrist.y,
         x: riggedRightHand.RightWrist.x,
       });
-      rigRotation(
-        "RightRingProximal",
-        currentVrm,
-        riggedRightHand.RightRingProximal
-      );
+      rigRotation("RightRingProximal", mod, riggedRightHand.RightRingProximal);
       rigRotation(
         "RightRingIntermediate",
-        currentVrm,
+        mod,
         riggedRightHand.RightRingIntermediate
       );
-      rigRotation(
-        "RightRingDistal",
-        currentVrm,
-        riggedRightHand.RightRingDistal
-      );
+      rigRotation("RightRingDistal", mod, riggedRightHand.RightRingDistal);
       rigRotation(
         "RightIndexProximal",
-        currentVrm,
+        mod,
         riggedRightHand.RightIndexProximal
       );
       rigRotation(
         "RightIndexIntermediate",
-        currentVrm,
+        mod,
         riggedRightHand.RightIndexIntermediate
       );
-      rigRotation(
-        "RightIndexDistal",
-        currentVrm,
-        riggedRightHand.RightIndexDistal
-      );
+      rigRotation("RightIndexDistal", mod, riggedRightHand.RightIndexDistal);
       rigRotation(
         "RightMiddleProximal",
-        currentVrm,
+        mod,
         riggedRightHand.RightMiddleProximal
       );
       rigRotation(
         "RightMiddleIntermediate",
-        currentVrm,
+        mod,
         riggedRightHand.RightMiddleIntermediate
       );
-      rigRotation(
-        "RightMiddleDistal",
-        currentVrm,
-        riggedRightHand.RightMiddleDistal
-      );
+      rigRotation("RightMiddleDistal", mod, riggedRightHand.RightMiddleDistal);
       rigRotation(
         "RightThumbProximal",
-        currentVrm,
+        mod,
         riggedRightHand.RightThumbProximal
       );
       rigRotation(
         "RightThumbIntermediate",
-        currentVrm,
+        mod,
         riggedRightHand.RightThumbIntermediate
       );
-      rigRotation(
-        "RightThumbDistal",
-        currentVrm,
-        riggedRightHand.RightThumbDistal
-      );
+      rigRotation("RightThumbDistal", mod, riggedRightHand.RightThumbDistal);
       rigRotation(
         "RightLittleProximal",
-        currentVrm,
+        mod,
         riggedRightHand.RightLittleProximal
       );
       rigRotation(
         "RightLittleIntermediate",
-        currentVrm,
+        mod,
         riggedRightHand.RightLittleIntermediate
       );
-      rigRotation(
-        "RightLittleDistal",
-        currentVrm,
-        riggedRightHand.RightLittleDistal
-      );
+      rigRotation("RightLittleDistal", mod, riggedRightHand.RightLittleDistal);
     }
   };
 
   const onResults = (results) => {
     // Animate model
-    animateVRM(currentVrm, results);
+    animateVRM(mod, results);
   };
 
   useEffect(() => {
