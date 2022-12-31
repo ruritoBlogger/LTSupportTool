@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Clock,
   DirectionalLight,
@@ -18,50 +18,10 @@ import { animateVRM } from "@components/Tracking3D/animateVRM";
 
 const Sample = (): JSX.Element => {
   const [mod, setMod] = useState<VRM | null>(null);
-  const [oldLookTarget, _] = useState<Euler>(new Euler());
+  const [scene] = useState<Scene>(new Scene());
+  const [oldLookTarget] = useState<Euler>(new Euler());
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  // renderer
-  const renderer = new WebGLRenderer({ alpha: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  document.body.appendChild(renderer.domElement);
-
-  // camera
-  const orbitCamera = new PerspectiveCamera(
-    35,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
-  orbitCamera.position.set(0.0, 1.4, 0.7);
-
-  // controls
-  const orbitControls = new OrbitControls(orbitCamera, renderer.domElement);
-  orbitControls.screenSpacePanning = true;
-  orbitControls.target.set(0.0, 1.4, 0.0);
-  orbitControls.update();
-
-  // scene
-  const scene = new Scene();
-
-  // light
-  const light = new DirectionalLight(0xffffff);
-  light.position.set(1.0, 1.0, 1.0).normalize();
-  scene.add(light);
-
-  // Main Render Loop
-  const clock = new Clock();
-
-  function animate() {
-    requestAnimationFrame(animate);
-
-    if (mod) {
-      // Update model to render physics
-      mod.update(clock.getDelta());
-    }
-    renderer.render(scene, orbitCamera);
-  }
-  animate();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     // Import Character VRM
@@ -99,7 +59,49 @@ const Sample = (): JSX.Element => {
 
   useEffect(() => {
     const videoElement = videoRef.current;
-    if (!videoElement) return;
+    const canvasElement = canvasRef.current;
+    if (!videoElement || !canvasElement) return;
+
+    // renderer
+    const renderer = new WebGLRenderer({ canvas: canvasElement, alpha: true });
+    renderer.setSize(canvasElement.clientWidth, canvasElement.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    // camera
+    const orbitCamera = new PerspectiveCamera(
+      35,
+      canvasElement.clientWidth / canvasElement.clientHeight,
+      0.1,
+      1000
+    );
+    orbitCamera.position.set(0.0, 1.4, 0.7);
+
+    // controls
+    const orbitControls = new OrbitControls(orbitCamera, canvasElement);
+    orbitControls.screenSpacePanning = true;
+    orbitControls.target.set(0.0, 1.4, 0.0);
+    orbitControls.update();
+
+    // scene
+
+    // light
+    const light = new DirectionalLight(0xffffff);
+    light.position.set(1.0, 1.0, 1.0).normalize();
+    scene.add(light);
+
+    // Main Render Loop
+    const clock = new Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (mod) {
+        // Update model to render physics
+        mod.update(clock.getDelta());
+      }
+      renderer.render(scene, orbitCamera);
+    }
+    animate();
 
     const holistic = new Holistic({
       locateFile: (file) => {
@@ -126,16 +128,17 @@ const Sample = (): JSX.Element => {
       height: 720,
     });
     camera.start();
-  }, [onResults]);
+  }, [videoRef.current, canvasRef.current]);
 
   return (
     <div className={rootStyle}>
-      <video ref={videoRef} className={hiddenStyle}></video>
+      <video ref={videoRef} className={hiddenStyle} />
+      <canvas ref={canvasRef} className={modelStyle} />
     </div>
   );
 };
 
-const Live2DModelStyle = css`
+const modelStyle = css`
   && {
     height: 100%;
     width: 100%;
@@ -157,12 +160,10 @@ const rootStyle = css`
  */
 const hiddenStyle = css`
   && {
-    /*
     height: 0;
     width: 0;
     position: absolute;
     opacity: 0;
-     */
   }
 `;
 
