@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   Clock,
   DirectionalLight,
@@ -10,10 +10,9 @@ import {
   WebGLRenderer,
 } from "three";
 import { css } from "@emotion/css";
-import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { VRM, VRMSchema, VRMUtils } from "@pixiv/three-vrm";
 import React from "react";
-import { FaceMesh, Results as FaceResult } from "@mediapipe/face_mesh";
 import { Camera } from "@mediapipe/camera_utils";
 import * as Kalidokit from "kalidokit";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -23,6 +22,9 @@ const clamp = Kalidokit.Utils.clamp;
 const lerp = Kalidokit.Vector.lerp;
 
 const Sample = (): JSX.Element => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   /* THREEJS WORLD SETUP */
   let currentVrm;
 
@@ -213,8 +215,8 @@ const Sample = (): JSX.Element => {
 
   /* VRM Character Animator */
   const animateVRM = (vrm, results) => {
-    let videoElement = document.querySelector(".input_video");
-    if (!vrm) {
+    const videoElement = videoRef.current;
+    if (!vrm || !videoElement) {
       return;
     }
     // Take the results from `Holistic` and animate character based on its Face, Pose, and Hand Keypoints.
@@ -354,8 +356,8 @@ const Sample = (): JSX.Element => {
   };
 
   useEffect(() => {
-    let videoElement = document.querySelector(".input_video"),
-      guideCanvas = document.querySelector("canvas.guides");
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
 
     const holistic = new Holistic({
       locateFile: (file) => {
@@ -386,8 +388,8 @@ const Sample = (): JSX.Element => {
 
   return (
     <div css={rootStyle}>
-      <video className="input_video" css={hiddenStyle}></video>
-      <canvas className="guides" css={hiddenStyle}></canvas>
+      <video ref={videoRef} css={hiddenStyle}></video>
+      <canvas ref={canvasRef} css={hiddenStyle}></canvas>
     </div>
   );
 };
