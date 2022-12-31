@@ -12,17 +12,9 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { VRM, VRMUtils } from "@pixiv/three-vrm";
 import React from "react";
 import { Camera } from "@mediapipe/camera_utils";
-import * as Kalidokit from "kalidokit";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Holistic } from "@mediapipe/holistic";
-import {
-  rigFace,
-  rigPosition,
-  rigRotation,
-} from "@components/Tracking3D/helper";
-
-const clamp = Kalidokit.Utils.clamp;
-const lerp = Kalidokit.Vector.lerp;
+import { Holistic, Results } from "@mediapipe/holistic";
+import { animateVRM } from "@components/Tracking3D/animateVRM";
 
 const Sample = (): JSX.Element => {
   const [mod, setMod] = useState<VRM | null>(null);
@@ -100,176 +92,9 @@ const Sample = (): JSX.Element => {
     );
   }, []);
 
-  /* VRM Character Animator */
-  const animateVRM = (vrm, results) => {
-    const videoElement = videoRef.current;
-    if (!vrm || !videoElement) {
-      return;
-    }
-    // Take the results from `Holistic` and animate character based on its Face, Pose, and Hand Keypoints.
-    let riggedPose, riggedLeftHand, riggedRightHand, riggedFace;
-
-    const faceLandmarks = results.faceLandmarks;
-    // Pose 3D Landmarks are with respect to Hip distance in meters
-    const pose3DLandmarks = results.ea;
-    // Pose 2D landmarks are with respect to videoWidth and videoHeight
-    const pose2DLandmarks = results.poseLandmarks;
-    // Be careful, hand landmarks may be reversed
-    const leftHandLandmarks = results.rightHandLandmarks;
-    const rightHandLandmarks = results.leftHandLandmarks;
-
-    // Animate Face
-    if (faceLandmarks) {
-      riggedFace = Kalidokit.Face.solve(faceLandmarks, {
-        runtime: "mediapipe",
-        video: videoElement,
-      });
-      rigFace(riggedFace, mod, oldLookTarget);
-    }
-
-    // Animate Pose
-    if (pose2DLandmarks && pose3DLandmarks) {
-      riggedPose = Kalidokit.Pose.solve(pose3DLandmarks, pose2DLandmarks, {
-        runtime: "mediapipe",
-        video: videoElement,
-      });
-      rigRotation("Hips", mod, riggedPose.Hips.rotation, 0.7);
-      rigPosition(
-        "Hips",
-        mod,
-        {
-          x: -riggedPose.Hips.position.x, // Reverse direction
-          y: riggedPose.Hips.position.y + 1, // Add a bit of height
-          z: -riggedPose.Hips.position.z, // Reverse direction
-        },
-        1,
-        0.07
-      );
-
-      rigRotation("Chest", mod, riggedPose.Spine, 0.25, 0.3);
-      rigRotation("Spine", mod, riggedPose.Spine, 0.45, 0.3);
-
-      rigRotation("RightUpperArm", mod, riggedPose.RightUpperArm, 1, 0.3);
-      rigRotation("RightLowerArm", mod, riggedPose.RightLowerArm, 1, 0.3);
-      rigRotation("LeftUpperArm", mod, riggedPose.LeftUpperArm, 1, 0.3);
-      rigRotation("LeftLowerArm", mod, riggedPose.LeftLowerArm, 1, 0.3);
-
-      rigRotation("LeftUpperLeg", mod, riggedPose.LeftUpperLeg, 1, 0.3);
-      rigRotation("LeftLowerLeg", mod, riggedPose.LeftLowerLeg, 1, 0.3);
-      rigRotation("RightUpperLeg", mod, riggedPose.RightUpperLeg, 1, 0.3);
-      rigRotation("RightLowerLeg", mod, riggedPose.RightLowerLeg, 1, 0.3);
-    }
-
-    // Animate Hands
-    if (leftHandLandmarks) {
-      riggedLeftHand = Kalidokit.Hand.solve(leftHandLandmarks, "Left");
-      rigRotation("LeftHand", mod, {
-        // Combine pose rotation Z and hand rotation X Y
-        z: riggedPose.LeftHand.z,
-        y: riggedLeftHand.LeftWrist.y,
-        x: riggedLeftHand.LeftWrist.x,
-      });
-      rigRotation("LeftRingProximal", mod, riggedLeftHand.LeftRingProximal);
-      rigRotation(
-        "LeftRingIntermediate",
-        mod,
-        riggedLeftHand.LeftRingIntermediate
-      );
-      rigRotation("LeftRingDistal", mod, riggedLeftHand.LeftRingDistal);
-      rigRotation("LeftIndexProximal", mod, riggedLeftHand.LeftIndexProximal);
-      rigRotation(
-        "LeftIndexIntermediate",
-        mod,
-        riggedLeftHand.LeftIndexIntermediate
-      );
-      rigRotation("LeftIndexDistal", mod, riggedLeftHand.LeftIndexDistal);
-      rigRotation("LeftMiddleProximal", mod, riggedLeftHand.LeftMiddleProximal);
-      rigRotation(
-        "LeftMiddleIntermediate",
-        mod,
-        riggedLeftHand.LeftMiddleIntermediate
-      );
-      rigRotation("LeftMiddleDistal", mod, riggedLeftHand.LeftMiddleDistal);
-      rigRotation("LeftThumbProximal", mod, riggedLeftHand.LeftThumbProximal);
-      rigRotation(
-        "LeftThumbIntermediate",
-        mod,
-        riggedLeftHand.LeftThumbIntermediate
-      );
-      rigRotation("LeftThumbDistal", mod, riggedLeftHand.LeftThumbDistal);
-      rigRotation("LeftLittleProximal", mod, riggedLeftHand.LeftLittleProximal);
-      rigRotation(
-        "LeftLittleIntermediate",
-        mod,
-        riggedLeftHand.LeftLittleIntermediate
-      );
-      rigRotation("LeftLittleDistal", mod, riggedLeftHand.LeftLittleDistal);
-    }
-    if (rightHandLandmarks) {
-      riggedRightHand = Kalidokit.Hand.solve(rightHandLandmarks, "Right");
-      rigRotation("RightHand", mod, {
-        // Combine Z axis from pose hand and X/Y axis from hand wrist rotation
-        z: riggedPose.RightHand.z,
-        y: riggedRightHand.RightWrist.y,
-        x: riggedRightHand.RightWrist.x,
-      });
-      rigRotation("RightRingProximal", mod, riggedRightHand.RightRingProximal);
-      rigRotation(
-        "RightRingIntermediate",
-        mod,
-        riggedRightHand.RightRingIntermediate
-      );
-      rigRotation("RightRingDistal", mod, riggedRightHand.RightRingDistal);
-      rigRotation(
-        "RightIndexProximal",
-        mod,
-        riggedRightHand.RightIndexProximal
-      );
-      rigRotation(
-        "RightIndexIntermediate",
-        mod,
-        riggedRightHand.RightIndexIntermediate
-      );
-      rigRotation("RightIndexDistal", mod, riggedRightHand.RightIndexDistal);
-      rigRotation(
-        "RightMiddleProximal",
-        mod,
-        riggedRightHand.RightMiddleProximal
-      );
-      rigRotation(
-        "RightMiddleIntermediate",
-        mod,
-        riggedRightHand.RightMiddleIntermediate
-      );
-      rigRotation("RightMiddleDistal", mod, riggedRightHand.RightMiddleDistal);
-      rigRotation(
-        "RightThumbProximal",
-        mod,
-        riggedRightHand.RightThumbProximal
-      );
-      rigRotation(
-        "RightThumbIntermediate",
-        mod,
-        riggedRightHand.RightThumbIntermediate
-      );
-      rigRotation("RightThumbDistal", mod, riggedRightHand.RightThumbDistal);
-      rigRotation(
-        "RightLittleProximal",
-        mod,
-        riggedRightHand.RightLittleProximal
-      );
-      rigRotation(
-        "RightLittleIntermediate",
-        mod,
-        riggedRightHand.RightLittleIntermediate
-      );
-      rigRotation("RightLittleDistal", mod, riggedRightHand.RightLittleDistal);
-    }
-  };
-
-  const onResults = (results) => {
+  const onResults = (results: Results) => {
     // Animate model
-    animateVRM(mod, results);
+    animateVRM(mod, oldLookTarget, videoRef.current, results);
   };
 
   useEffect(() => {
