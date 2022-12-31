@@ -274,7 +274,7 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@mediapipe/camera_utils@0.3.1640029074":
+"@mediapipe/camera_utils@^0.3.1640029074":
   version "0.3.1640029074"
   resolved "https://registry.yarnpkg.com/@mediapipe/camera_utils/-/camera_utils-0.3.1640029074.tgz#f8b50a2c0bf6a5f4d8cff0524ed71887c4639280"
   integrity sha512-jRV/Mp2lgqNYT68TeVRu/Xq+ptZO9F9vCjxzQsA3VM2r7oXg0TrnfO9De2KKOUTpt0p28dKHs625J8GdWjha8A==
