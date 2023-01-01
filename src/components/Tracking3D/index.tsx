@@ -8,49 +8,23 @@ import {
   WebGLRenderer,
 } from "three";
 import { css } from "@emotion/css";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { VRM, VRMUtils } from "@pixiv/three-vrm";
 import React from "react";
 import { Camera } from "@mediapipe/camera_utils";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Holistic, Results } from "@mediapipe/holistic";
 import { animateVRM } from "@components/Tracking3D/animateVRM";
+import { useLoadVRM } from "@components/Tracking3D/useLoadVRM";
 
 const Tracking3D = (): JSX.Element => {
-  const [mod, setMod] = useState<VRM | null>(null);
+  const { vrm: mod, loadVrm } = useLoadVRM();
   const [scene] = useState<Scene>(new Scene());
   const [oldLookTarget] = useState<Euler>(new Euler());
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // Import Character VRM
-    const loader = new GLTFLoader();
-    loader.crossOrigin = "anonymous";
-    // Import model from URL, add your own model here
-    loader.load(
-      "https://cdn.glitch.com/29e07830-2317-4b15-a044-135e73c7f840%2FAshtra.vrm?v=1630342336981",
-
-      (gltf) => {
-        VRMUtils.removeUnnecessaryJoints(gltf.scene);
-
-        VRM.from(gltf).then((vrm) => {
-          scene.add(vrm.scene);
-          vrm.scene.rotation.y = Math.PI; // Rotate model 180deg to face camera
-          setMod(vrm);
-        });
-      },
-
-      (progress) =>
-        console.log(
-          "Loading model...",
-          100.0 * (progress.loaded / progress.total),
-          "%"
-        ),
-
-      (error) => console.error(error)
-    );
-  }, []);
+    loadVrm(scene);
+  }, [loadVrm, scene]);
 
   const onResults = (results: Results) => {
     // Animate model
