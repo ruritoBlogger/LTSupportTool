@@ -24,14 +24,14 @@ const Tracking3D = (): JSX.Element => {
 
   useEffect(() => {
     loadVrm(scene);
-  }, []);
+  }, [loadVrm, scene]);
 
   const onResults = useCallback(
     (results: Results) => {
       // Animate model
       animateVRM(mod, oldLookTarget, videoRef.current, results);
     },
-    [animateVRM, mod, oldLookTarget, videoRef.current]
+    [mod, oldLookTarget]
   );
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const Tracking3D = (): JSX.Element => {
       height: 720,
     });
     camera.start();
-  }, [videoRef.current, canvasRef.current]);
+  }, [scene, onResults, mod]);
 
   return (
     <div className={rootStyle}>
