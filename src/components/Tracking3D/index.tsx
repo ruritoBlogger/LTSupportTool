@@ -14,6 +14,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Holistic, Results } from "@mediapipe/holistic";
 import { animateVRM } from "@components/Tracking3D/animateVRM";
 import { useLoadVRM } from "@components/Tracking3D/useLoadVRM";
+import { Paper } from "@mui/material";
+import { animateTrackingData } from "@components/Tracking3D/animateTrackingData";
 
 const Tracking3D = (): JSX.Element => {
   const { vrm: mod, loadVrm } = useLoadVRM();
@@ -21,6 +23,7 @@ const Tracking3D = (): JSX.Element => {
   const [oldLookTarget] = useState<Euler>(new Euler());
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const trackingCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     loadVrm(scene);
@@ -30,6 +33,11 @@ const Tracking3D = (): JSX.Element => {
     (results: Results) => {
       // Animate model
       animateVRM(mod, oldLookTarget, videoRef.current, results);
+
+      // Animate tracking data
+      // TODO: ボタンで表示・非表示を切り替えたい
+      if (!trackingCanvasRef.current) return;
+      animateTrackingData(results, trackingCanvasRef.current);
     },
     [mod, oldLookTarget]
   );
@@ -51,15 +59,13 @@ const Tracking3D = (): JSX.Element => {
       0.1,
       1000
     );
-    orbitCamera.position.set(0.0, 1.4, 0.7);
+    orbitCamera.position.set(0.0, 1.4, 1.5);
 
     // controls
     const orbitControls = new OrbitControls(orbitCamera, canvasElement);
     orbitControls.screenSpacePanning = true;
     orbitControls.target.set(0.0, 1.4, 0.0);
     orbitControls.update();
-
-    // scene
 
     // light
     const light = new DirectionalLight(0xffffff);
@@ -109,8 +115,11 @@ const Tracking3D = (): JSX.Element => {
 
   return (
     <div className={rootStyle}>
-      <video ref={videoRef} className={hiddenStyle} />
       <canvas ref={canvasRef} className={modelStyle} />
+      <Paper className={cardStyle}>
+        <video ref={videoRef} className={trackingStyle} />
+        <canvas ref={trackingCanvasRef} className={trackingStyle} />
+      </Paper>
     </div>
   );
 };
@@ -119,6 +128,7 @@ const modelStyle = css`
   && {
     height: 100%;
     width: 100%;
+    grid-area: 1/2;
   }
 `;
 
@@ -127,6 +137,27 @@ const rootStyle = css`
     height: 100%;
     width: 100%;
     background-color: inherit;
+    display: grid;
+  }
+`;
+
+const cardStyle = css`
+  && {
+    width: 384px;
+    height: 216px;
+    grid-area: 1/2;
+    justify-self: end;
+    align-self: end;
+    display: grid;
+  }
+`;
+
+// NOTE: 1280 / 10 * 2 = 256, 720 / 10 * 2 = 144
+const trackingStyle = css`
+  && {
+    grid-area: 1/2;
+    width: 100%;
+    height: 100%;
   }
 `;
 

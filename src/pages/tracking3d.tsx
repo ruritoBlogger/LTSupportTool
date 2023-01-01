@@ -19,8 +19,8 @@ const Tracking3D: NextPage = () => {
 
 const rootStyle = css`
   && {
-    width: 85vw;
-    height: 85vh;
+    width: 100vw;
+    height: 95vh;
     margin: auto;
     background-color: white;
   }
