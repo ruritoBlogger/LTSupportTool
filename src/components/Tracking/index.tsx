@@ -5,18 +5,21 @@ import { draw, live2dRender } from "@libs/renderer";
 import { Camera } from "@mediapipe/camera_utils";
 import {
   FaceMesh,
+  FACEMESH_TESSELATION,
   NormalizedLandmarkList,
   Results as FaceResult,
 } from "@mediapipe/face_mesh";
+import { Paper } from "@mui/material";
 import axios from "axios";
 import * as Kalidokit from "kalidokit";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 
 /**
  * カメラ情報を用いた顔のトラッキングを行う
  * @url https://zenn.dev/mooriii/articles/f6a2eef484e837
  */
-const Tracking = (): JSX.Element => {
+const Tracking = ({ showCamera }: { showCamera?: boolean }): JSX.Element => {
   const [mod, setMod] = useState<AppCubismUserModel | null>(null);
   const avatarCanvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -81,18 +84,50 @@ const Tracking = (): JSX.Element => {
         console.error(e);
       }
     }
-  }, []);
+  }, [
+    live2dModel.moc3,
+    live2dModel.model3,
+    live2dModel.physics3,
+    live2dModel.textures,
+  ]);
 
   useEffect(() => {
     load();
   }, [load]);
 
+  const drawResults = useCallback((points: NormalizedLandmarkList) => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement) return;
+    const canvasCtx = canvasElement.getContext("2d");
+    if (!canvasCtx) return;
+    canvasCtx.save();
+    canvasCtx.clearRect(
+      0,
+      0,
+      canvasElement.clientWidth,
+      canvasElement.clientHeight
+    );
+
+    // 用意したcanvasにトラッキングしたデータを表示
+    drawConnectors(canvasCtx, points, FACEMESH_TESSELATION, {
+      color: "#C0C0C070",
+      lineWidth: 1,
+    });
+    if (points && points.length === 478) {
+      drawLandmarks(canvasCtx, [points[468], points[468 + 5]], {
+        color: "#ffe603",
+        lineWidth: 2,
+      });
+    }
+  }, []);
+
   // facemeshから結果が取れたときのコールバック関数
   const onResult = useCallback(
     (results: FaceResult) => {
       animateLive2DModel(results.multiFaceLandmarks[0]);
+      drawResults(results.multiFaceLandmarks[0]);
     },
-    [animateLive2DModel]
+    [animateLive2DModel, drawResults]
   );
 
   useEffect(() => {
@@ -128,9 +163,11 @@ const Tracking = (): JSX.Element => {
 
   return (
     <div className={rootStyle}>
-      <video className={hiddenStyle} ref={videoRef} />
-      <canvas className={hiddenStyle} ref={canvasRef} />
       <canvas ref={avatarCanvasRef} className={Live2DModelStyle} />
+      <Paper className={cardStyle} style={{ opacity: showCamera ? 1 : 0 }}>
+        <video ref={videoRef} className={trackingStyle} />
+        <canvas ref={canvasRef} className={trackingStyle} />
+      </Paper>
     </div>
   );
 };
@@ -139,7 +176,27 @@ const rootStyle = css`
   && {
     height: 100%;
     width: 100%;
+    display: grid;
     background-color: inherit;
+  }
+`;
+
+const cardStyle = css`
+  && {
+    width: 384px;
+    height: 216px;
+    grid-area: 1/2;
+    justify-self: end;
+    align-self: end;
+    display: grid;
+  }
+`;
+
+const trackingStyle = css`
+  && {
+    grid-area: 1/2;
+    width: 100%;
+    height: 100%;
   }
 `;
 
@@ -161,6 +218,7 @@ const Live2DModelStyle = css`
   && {
     height: 100%;
     width: 100%;
+    grid-area: 1/2;
   }
 `;
 

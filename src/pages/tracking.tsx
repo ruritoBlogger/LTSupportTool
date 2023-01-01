@@ -11,7 +11,7 @@ const Tracking: NextPage = () => {
   return (
     <SWRConfig value={{ suspense: true }}>
       <div className={rootStyle}>
-        <TrackingComponent />
+        <TrackingComponent showCamera />
       </div>
     </SWRConfig>
   );
@@ -19,8 +19,8 @@ const Tracking: NextPage = () => {
 
 const rootStyle = css`
   && {
-    width: 85vw;
-    height: 85vh;
+    width: 100vw;
+    height: 95vh;
     margin: auto;
     background-color: white;
   }
