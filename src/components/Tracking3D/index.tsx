@@ -24,12 +24,15 @@ const Tracking3D = (): JSX.Element => {
 
   useEffect(() => {
     loadVrm(scene);
-  }, [loadVrm, scene]);
+  }, []);
 
-  const onResults = (results: Results) => {
-    // Animate model
-    animateVRM(mod, oldLookTarget, videoRef.current, results);
-  };
+  const onResults = useCallback(
+    (results: Results) => {
+      // Animate model
+      animateVRM(mod, oldLookTarget, videoRef.current, results);
+    },
+    [animateVRM, mod, oldLookTarget, videoRef.current]
+  );
 
   useEffect(() => {
     const videoElement = videoRef.current;
