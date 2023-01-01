@@ -16,7 +16,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Holistic, Results } from "@mediapipe/holistic";
 import { animateVRM } from "@components/Tracking3D/animateVRM";
 
-const Sample = (): JSX.Element => {
+const Tracking3D = (): JSX.Element => {
   const [mod, setMod] = useState<VRM | null>(null);
   const [scene] = useState<Scene>(new Scene());
   const [oldLookTarget] = useState<Euler>(new Euler());
@@ -167,4 +167,4 @@ const hiddenStyle = css`
   }
 `;
 
-export default Sample;
+export default Tracking3D;
