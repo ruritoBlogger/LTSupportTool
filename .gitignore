@@ -6,4 +6,8 @@ out
 public/*
 !public/.gitkeep
 !public/LTSupportTool.gif
+!public/presen_2d.png
+!public/tool.png
+!public/tracking2d.png
+!public/tracking3d.png
 src/libs/Core
