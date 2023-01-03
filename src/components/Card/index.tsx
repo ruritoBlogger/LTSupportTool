@@ -26,14 +26,21 @@ const CustomCard = ({ url, children }: CustomCardProps): JSX.Element => {
 interface MediaProps {
   imagePath: string;
   imageAltText: string;
+  size?: "small" | "normal" | "large";
 }
 
-const Media = ({ imagePath, imageAltText }: MediaProps): JSX.Element => {
+const Media = ({
+  imagePath,
+  imageAltText,
+  size = "small",
+}: MediaProps): JSX.Element => {
+  const imageHeight = size === "small" ? 140 : size === "normal" ? 240 : 340;
+
   return (
     <>
       <CardMedia
         component="img"
-        height="140"
+        height={imageHeight}
         image={imagePath}
         alt={imageAltText}
       />

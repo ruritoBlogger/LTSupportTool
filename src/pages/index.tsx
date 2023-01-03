@@ -12,6 +12,7 @@ const App: NextPage = () => {
           <Grid item className={cardStyle}>
             <CustomCard url={"/tracking3d"}>
               <CustomCard.Media
+                size={"normal"}
                 imagePath={"/tracking3d.png"}
                 imageAltText={"VRMを用いた3Dトラッキングのデモ画像"}
               />
@@ -28,6 +29,7 @@ const App: NextPage = () => {
           <Grid item className={cardStyle}>
             <CustomCard url={"/tracking2d"}>
               <CustomCard.Media
+                size={"normal"}
                 imagePath={"/tracking2d.png"}
                 imageAltText={"Live2Dを用いた2Dトラッキングのデモ画像"}
               />
@@ -61,6 +63,7 @@ const App: NextPage = () => {
           <Grid item className={cardStyle}>
             <CustomCard url={"/presen"}>
               <CustomCard.Media
+                size={"normal"}
                 imagePath={"/presen_2d.png"}
                 imageAltText={"Live2Dを用いたプレゼンツール"}
               />
@@ -84,9 +87,9 @@ const App: NextPage = () => {
 
 const rootStyle = css`
   && {
-    height: 80vh;
+    height: 90vh;
     width: 80vw;
-    margin: 10vh 10vw;
+    margin: 5vh 10vw;
   }
 `;
 
