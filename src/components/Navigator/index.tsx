@@ -13,17 +13,34 @@ const Navigator = (): JSX.Element => {
     <>
       <Paper>
         <Stack direction={"row"} spacing={1}>
+          <Button>
+            <Link legacyBehavior href={"/"}>
+              <a style={{ textDecoration: "none" }}>トップページ</a>
+            </Link>
+          </Button>
           {isNotTracking2DPage && (
             <Button>
-              <Link href={"/tracking2d"} style={{ textDecoration: "none" }}>
-                2Dトラッキングデモ
+              <Link legacyBehavior href={"/tracking2d"}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: "none" }}
+                >
+                  2Dトラッキングデモ
+                </a>
               </Link>
             </Button>
           )}
           {isNotTracking3DPage && (
             <Button>
-              <Link href={"/tracking3d"} style={{ textDecoration: "none" }}>
-                3Dトラッキングデモ
+              <Link legacyBehavior href={"/tracking3d"}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: "none" }}
+                >
+                  3Dトラッキングデモ
+                </a>
               </Link>
             </Button>
           )}
