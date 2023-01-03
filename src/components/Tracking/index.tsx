@@ -29,20 +29,21 @@ const Tracking = ({ showCamera }: { showCamera?: boolean }): JSX.Element => {
   const animateLive2DModel = useCallback(
     (points: NormalizedLandmarkList) => {
       const videoElement = videoRef.current;
-      if (!mod || !points) return;
+      const avatarCanvasElement = avatarCanvasRef.current;
+      if (!mod || !points || !videoElement || !avatarCanvasElement) return;
       const riggedFace = Kalidokit.Face.solve(points, {
         runtime: "mediapipe",
         video: videoElement,
       });
 
       const lastUpdateTime = Date.now();
-      draw(avatarCanvasRef.current!, lastUpdateTime, mod, riggedFace, 1);
+      draw(avatarCanvasElement, lastUpdateTime, mod, riggedFace, 1);
     },
     [mod]
   );
 
   const load = useCallback(async () => {
-    if (canvasRef.current!) {
+    if (canvasRef.current && avatarCanvasRef.current) {
       try {
         const [model, moc3, physics] = await Promise.all([
           axios
@@ -65,7 +66,7 @@ const Tracking = ({ showCamera }: { showCamera?: boolean }): JSX.Element => {
         );
 
         const mod = await live2dRender(
-          avatarCanvasRef.current!,
+          avatarCanvasRef.current,
           model,
           {
             moc3,
