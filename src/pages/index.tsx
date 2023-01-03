@@ -41,6 +41,41 @@ const App: NextPage = () => {
               </CustomCard.Content>
             </CustomCard>
           </Grid>
+          <Grid item className={cardStyle}>
+            <CustomCard url={"/presenter_tool"}>
+              <CustomCard.Media
+                imagePath={"/tool.png"}
+                imageAltText={"プレゼンページで使用するサポートツール"}
+              />
+              <CustomCard.Content subtitle={"発表者ツール"}>
+                <>
+                  プレゼンページの挙動を操作するページです。
+                  プレゼンページにて設定されるタイマーの開始・ストップ・リセットなどを行うことが出来ます。
+                  またプレゼンページにて表示するスライドの url
+                  の設定も行うことが出来ます。
+                  別ブラウザを用いたプレゼンページ・発表者ツールページの同時表示にも対応しています。
+                </>
+              </CustomCard.Content>
+            </CustomCard>
+          </Grid>
+          <Grid item className={cardStyle}>
+            <CustomCard url={"/presen"}>
+              <CustomCard.Media
+                imagePath={"/presen_2d.png"}
+                imageAltText={"Live2Dを用いたプレゼンツール"}
+              />
+              <CustomCard.Content subtitle={"Live2Dを用いたプレゼンツール"}>
+                <>
+                  Live2D モデルを用いたプレゼンツールです。
+                  プレゼンの画面やタイマー・ Live2D モデルの表示が出来ます。
+                  デモと同じ形で Live2D モデルを制御することが出来ます。
+                  またタイマーは発表者ツールにて開始・ストップ・リセットなどを行うことが出来ます。
+                  他にも表示するスライドの url
+                  は発表者ツールから変更する事ができます。
+                </>
+              </CustomCard.Content>
+            </CustomCard>
+          </Grid>
         </Grid>
       </div>
     </SWRConfig>

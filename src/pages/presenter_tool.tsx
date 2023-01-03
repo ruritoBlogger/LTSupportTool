@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
@@ -48,11 +48,13 @@ const PresenterToolPage: NextPage = () => {
   return (
     <SWRConfig value={{ suspense: true }}>
       <div className={rootStyle}>
-        <p>発表者ツール</p>
-        <Button onClick={handleStartTimerClick}>スタート</Button>
-        <Button onClick={handleStopTimerClick}>ストップ</Button>
-        <Button onClick={handleResetTimerClick}>リセット</Button>
-        <GoogleSlideForm onSubmit={handleURLFormSubmit} />
+        <Stack direction={"row"} spacing={2}>
+          <p>発表者ツール</p>
+          <Button onClick={handleStartTimerClick}>スタート</Button>
+          <Button onClick={handleStopTimerClick}>ストップ</Button>
+          <Button onClick={handleResetTimerClick}>リセット</Button>
+          <GoogleSlideForm onSubmit={handleURLFormSubmit} />
+        </Stack>
       </div>
     </SWRConfig>
   );
@@ -60,8 +62,9 @@ const PresenterToolPage: NextPage = () => {
 
 const rootStyle = css`
   && {
-    height: 100vh;
-    width: 100vw;
+    height: 80vh;
+    width: 80vw;
+    margin: 10vw 10vh;
   }
 `;
 
