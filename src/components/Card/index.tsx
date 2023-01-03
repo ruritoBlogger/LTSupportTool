@@ -8,34 +8,54 @@ import {
 } from "@mui/material";
 
 interface CustomCardProps {
-  title: string;
-  imagePath: string;
-  imageAltText: string;
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 }
 
-export const CustomCard = ({
-  title,
-  children,
-  imagePath,
-  imageAltText,
-}: CustomCardProps): JSX.Element => {
+const CustomCard = ({ children }: CustomCardProps): JSX.Element => {
   return (
     <>
       <Card>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            height="140"
-            image={imagePath}
-            alt={imageAltText}
-          />
-          <CardContent>
-            <Typography variant={"h5"}>{title}</Typography>
-            {children}
-          </CardContent>
-        </CardActionArea>
+        <CardActionArea>{children}</CardActionArea>
       </Card>
     </>
   );
 };
+
+interface MediaProps {
+  imagePath: string;
+  imageAltText: string;
+}
+
+const Media = ({ imagePath, imageAltText }: MediaProps): JSX.Element => {
+  return (
+    <>
+      <CardMedia
+        component="img"
+        height="140"
+        image={imagePath}
+        alt={imageAltText}
+      />
+    </>
+  );
+};
+
+interface ContentProps {
+  subtitle: string;
+  children: JSX.Element;
+}
+
+const Content = ({ subtitle, children }: ContentProps): JSX.Element => {
+  return (
+    <>
+      <CardContent>
+        <Typography variant={"h5"}>{subtitle}</Typography>
+        <Typography variant={"body2"}>{children}</Typography>
+      </CardContent>
+    </>
+  );
+};
+
+CustomCard.Media = Media;
+CustomCard.Content = Content;
+
+export default CustomCard;
