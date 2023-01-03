@@ -16,6 +16,8 @@ LTのサポートを行うツールです
 
 `src/libs/`に上のリンクからダウンロードできるCubism SDK for Webの`Core`を設置してください。
 
+また Cubism Core for Web の方もダウンロードし、 `public/` に配置してください。
+
 使用バージョン: (`Cubism 4 SDK for Web R4`)
 
 コンテナを起動すると、 `http://localhost:3000`にページが表示されます
