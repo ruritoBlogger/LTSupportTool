@@ -8,24 +8,38 @@ const App: NextPage = () => {
   return (
     <SWRConfig value={{ suspense: true }}>
       <div className={rootStyle}>
-        <Grid container direction={"column"}>
-          <Grid container item>
-            <Grid item className={cardStyle}>
-              <CustomCard>
-                <CustomCard.Media
-                  imagePath={"/tracking3d.png"}
-                  imageAltText={"VRMを用いた3Dトラッキングのデモ画像"}
-                />
-                <CustomCard.Content subtitle={"VRMを用いたデモ"}>
-                  <>
-                    プレゼンツールなどで使用している Live2D
-                    モデルを操作するデモです。
-                    Webカメラを通して取得した顔の表情を元に Live2D
-                    のモデルを操作することが出来ます。
-                  </>
-                </CustomCard.Content>
-              </CustomCard>
-            </Grid>
+        <Grid container item spacing={2}>
+          <Grid item className={cardStyle}>
+            <CustomCard>
+              <CustomCard.Media
+                imagePath={"/tracking3d.png"}
+                imageAltText={"VRMを用いた3Dトラッキングのデモ画像"}
+              />
+              <CustomCard.Content subtitle={"VRMを用いたデモ"}>
+                <>
+                  プレゼンツールなどで使用している VRM
+                  モデルを操作するデモです。
+                  Webカメラを通して取得した顔の表情や腕などの情報を元に VRM
+                  のモデルを操作することが出来ます。
+                </>
+              </CustomCard.Content>
+            </CustomCard>
+          </Grid>
+          <Grid item className={cardStyle}>
+            <CustomCard>
+              <CustomCard.Media
+                imagePath={"/tracking2d.png"}
+                imageAltText={"Live2Dを用いた2Dトラッキングのデモ画像"}
+              />
+              <CustomCard.Content subtitle={"Live2Dを用いたデモ"}>
+                <>
+                  プレゼンツールなどで使用している Live2D
+                  モデルを操作するデモです。
+                  Webカメラを通して取得した顔の表情を元に Live2D
+                  のモデルを操作することが出来ます。
+                </>
+              </CustomCard.Content>
+            </CustomCard>
           </Grid>
         </Grid>
       </div>
