@@ -3,15 +3,28 @@ import Navigator from "@components/Navigator";
 import { css } from "@emotion/css";
 import { NextPage } from "next";
 import { SWRConfig } from "swr";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Grid,
+  Typography,
+} from "@mui/material";
+import { CustomCard } from "@components/Card";
 
 const App: NextPage = () => {
   return (
     <SWRConfig value={{ suspense: true }}>
       <div className={rootStyle}>
-        <div className={hoverStyle}>
-          <Navigator />
-        </div>
-        <PresenLayout url={""} Sidebar={() => <p>サイドバー(予定)</p>} />
+        <Grid container direction={"column"}>
+          <Grid container item>
+            <Grid item className={cardStyle}>
+              <CustomCard />
+            </Grid>
+          </Grid>
+        </Grid>
       </div>
     </SWRConfig>
   );
@@ -19,16 +32,16 @@ const App: NextPage = () => {
 
 const rootStyle = css`
   && {
-    height: 100vh;
-    width: 100vw;
+    height: 80vh;
+    width: 80vw;
+    margin: 10vh 10vw;
   }
 `;
 
-const hoverStyle = css`
+const cardStyle = css`
   && {
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 35vw;
+    max-width: 400px;
   }
 `;
 
