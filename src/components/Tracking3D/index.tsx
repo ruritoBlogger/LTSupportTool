@@ -17,7 +17,7 @@ import { useLoadVRM } from "@components/Tracking3D/useLoadVRM";
 import { Paper } from "@mui/material";
 import { animateTrackingData } from "@components/Tracking3D/animateTrackingData";
 
-const Tracking3D = (): JSX.Element => {
+const Tracking3D = ({ showCamera }: { showCamera?: boolean }): JSX.Element => {
   const { vrm: mod, loadVrm } = useLoadVRM();
   const [scene] = useState<Scene>(new Scene());
   const [oldLookTarget] = useState<Euler>(new Euler());
@@ -116,7 +116,7 @@ const Tracking3D = (): JSX.Element => {
   return (
     <div className={rootStyle}>
       <canvas ref={canvasRef} className={modelStyle} />
-      <Paper className={cardStyle}>
+      <Paper className={cardStyle} style={{ opacity: showCamera ? 1 : 0 }}>
         <video ref={videoRef} className={trackingStyle} />
         <canvas ref={trackingCanvasRef} className={trackingStyle} />
       </Paper>

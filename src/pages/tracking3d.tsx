@@ -15,7 +15,7 @@ const Tracking3D: NextPage = () => {
         <div className={hoverStyle}>
           <Navigator />
         </div>
-        <Tracking3DComponent />
+        <Tracking3DComponent showCamera />
       </div>
     </SWRConfig>
   );
