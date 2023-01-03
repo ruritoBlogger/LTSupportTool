@@ -46,6 +46,7 @@ const App: NextPage = () => {
           <Grid item className={cardStyle}>
             <CustomCard url={"/presenter_tool"}>
               <CustomCard.Media
+                size={"normal"}
                 imagePath={"/tool.png"}
                 imageAltText={"プレゼンページで使用するサポートツール"}
               />
@@ -74,6 +75,24 @@ const App: NextPage = () => {
                   デモと同じ形で Live2D モデルを制御することが出来ます。
                   またタイマーは発表者ツールにて開始・ストップ・リセットなどを行うことが出来ます。
                   他にも表示するスライドの url
+                  は発表者ツールから変更する事ができます。
+                </>
+              </CustomCard.Content>
+            </CustomCard>
+          </Grid>
+
+          <Grid item className={cardStyle}>
+            <CustomCard url={"/presen3d"}>
+              <CustomCard.Media
+                size={"large"}
+                imagePath={"/presen_3d.png"}
+                imageAltText={"VRMを用いたプレゼンツール"}
+              />
+              <CustomCard.Content subtitle={"VRMを用いたプレゼンツール"}>
+                <>
+                  VRM モデルを用いたプレゼンツールです。 プレゼンの画面や VRM
+                  モデルの表示が出来ます。 デモと同じ形で VRM
+                  モデルを制御することが出来ます。 また表示するスライドの url
                   は発表者ツールから変更する事ができます。
                 </>
               </CustomCard.Content>
