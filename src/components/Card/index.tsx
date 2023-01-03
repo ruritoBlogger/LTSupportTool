@@ -34,7 +34,7 @@ const Media = ({
   imageAltText,
   size = "small",
 }: MediaProps): JSX.Element => {
-  const imageHeight = size === "small" ? 140 : size === "normal" ? 240 : 340;
+  const imageHeight = size === "small" ? 80 : size === "normal" ? 180 : 240;
 
   return (
     <>

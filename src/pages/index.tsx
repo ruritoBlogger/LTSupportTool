@@ -63,7 +63,7 @@ const App: NextPage = () => {
           <Grid item className={cardStyle}>
             <CustomCard url={"/presen"}>
               <CustomCard.Media
-                size={"normal"}
+                size={"large"}
                 imagePath={"/presen_2d.png"}
                 imageAltText={"Live2Dを用いたプレゼンツール"}
               />
