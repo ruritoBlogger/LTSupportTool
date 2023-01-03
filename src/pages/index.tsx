@@ -21,7 +21,18 @@ const App: NextPage = () => {
         <Grid container direction={"column"}>
           <Grid container item>
             <Grid item className={cardStyle}>
-              <CustomCard />
+              <CustomCard
+                imagePath={"/tracking3d.png"}
+                imageAltText={"VRMを用いた3Dトラッキングのデモ画像"}
+                title={"Live2Dを用いたデモ"}
+              >
+                <Typography variant={"body2"}>
+                  プレゼンツールなどで使用している Live2D
+                  モデルを操作するデモです。
+                  Webカメラを通して取得した顔の表情を元に Live2D
+                  のモデルを操作することが出来ます。
+                </Typography>
+              </CustomCard>
             </Grid>
           </Grid>
         </Grid>

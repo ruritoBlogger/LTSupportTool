@@ -7,7 +7,19 @@ import {
   Typography,
 } from "@mui/material";
 
-export const CustomCard = (): JSX.Element => {
+interface CustomCardProps {
+  title: string;
+  imagePath: string;
+  imageAltText: string;
+  children: JSX.Element;
+}
+
+export const CustomCard = ({
+  title,
+  children,
+  imagePath,
+  imageAltText,
+}: CustomCardProps): JSX.Element => {
   return (
     <>
       <Card>
@@ -15,16 +27,12 @@ export const CustomCard = (): JSX.Element => {
           <CardMedia
             component="img"
             height="140"
-            image="/tracking3d.png"
-            alt="VRMを用いた3Dトラッキングのデモ画像"
+            image={imagePath}
+            alt={imageAltText}
           />
           <CardContent>
-            <Typography variant={"h5"}>Live2Dを用いたデモ</Typography>
-            <Typography variant={"body2"}>
-              プレゼンツールなどで使用している Live2D モデルを操作するデモです。
-              Webカメラを通して取得した顔の表情を元に Live2D
-              のモデルを操作することが出来ます。
-            </Typography>
+            <Typography variant={"h5"}>{title}</Typography>
+            {children}
           </CardContent>
         </CardActionArea>
       </Card>
