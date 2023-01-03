@@ -10,7 +10,7 @@ const App: NextPage = () => {
       <div className={rootStyle}>
         <Grid container item spacing={2}>
           <Grid item className={cardStyle}>
-            <CustomCard>
+            <CustomCard url={"/tracking3d"}>
               <CustomCard.Media
                 imagePath={"/tracking3d.png"}
                 imageAltText={"VRMを用いた3Dトラッキングのデモ画像"}
@@ -26,7 +26,7 @@ const App: NextPage = () => {
             </CustomCard>
           </Grid>
           <Grid item className={cardStyle}>
-            <CustomCard>
+            <CustomCard url={"/tracking2d"}>
               <CustomCard.Media
                 imagePath={"/tracking2d.png"}
                 imageAltText={"Live2Dを用いた2Dトラッキングのデモ画像"}

@@ -6,16 +6,18 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 
 interface CustomCardProps {
+  url: string;
   children: JSX.Element | JSX.Element[];
 }
 
-const CustomCard = ({ children }: CustomCardProps): JSX.Element => {
+const CustomCard = ({ url, children }: CustomCardProps): JSX.Element => {
   return (
     <>
       <Card>
-        <CardActionArea>{children}</CardActionArea>
+        <CardActionArea href={url}>{children}</CardActionArea>
       </Card>
     </>
   );
