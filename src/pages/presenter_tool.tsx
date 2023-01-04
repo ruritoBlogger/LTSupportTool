@@ -3,7 +3,6 @@ import { Button, Stack } from "@mui/material";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { SWRConfig } from "swr";
 import GoogleSlideForm from "@components/GoogleSlideForm";
 
 const PresenterToolPage: NextPage = () => {
@@ -46,17 +45,15 @@ const PresenterToolPage: NextPage = () => {
   };
 
   return (
-    <SWRConfig value={{ suspense: true }}>
-      <div className={rootStyle}>
-        <Stack direction={"row"} spacing={2}>
-          <p>発表者ツール</p>
-          <Button onClick={handleStartTimerClick}>スタート</Button>
-          <Button onClick={handleStopTimerClick}>ストップ</Button>
-          <Button onClick={handleResetTimerClick}>リセット</Button>
-          <GoogleSlideForm onSubmit={handleURLFormSubmit} />
-        </Stack>
-      </div>
-    </SWRConfig>
+    <div className={rootStyle}>
+      <Stack direction={"row"} spacing={2}>
+        <p>発表者ツール</p>
+        <Button onClick={handleStartTimerClick}>スタート</Button>
+        <Button onClick={handleStopTimerClick}>ストップ</Button>
+        <Button onClick={handleResetTimerClick}>リセット</Button>
+        <GoogleSlideForm onSubmit={handleURLFormSubmit} />
+      </Stack>
+    </div>
   );
 };
 

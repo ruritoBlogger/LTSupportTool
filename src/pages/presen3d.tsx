@@ -3,7 +3,6 @@ import { NextPage } from "next";
 import { css } from "@emotion/css";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import { SWRConfig } from "swr";
 import GoogleSlide from "@components/GoogleSlide";
 
 const TrackingComponent = dynamic(() => import("@components/Tracking3D"), {
@@ -22,16 +21,14 @@ const Presen3DPage: NextPage = () => {
   }, [setUrl]);
 
   return (
-    <SWRConfig value={{ suspense: true }}>
-      <div className={rootStyle}>
-        <div className={presenStyle}>
-          <GoogleSlide url={url} />
-        </div>
-        <div className={modelStyle}>
-          <TrackingComponent />
-        </div>
+    <div className={rootStyle}>
+      <div className={presenStyle}>
+        <GoogleSlide url={url} />
       </div>
-    </SWRConfig>
+      <div className={modelStyle}>
+        <TrackingComponent />
+      </div>
+    </div>
   );
 };
 

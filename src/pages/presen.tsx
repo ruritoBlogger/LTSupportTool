@@ -2,7 +2,6 @@ import PresenLayout from "@components/PresenLayout";
 import { css } from "@emotion/css";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import { SWRConfig } from "swr";
 import Timer from "@components/Timer";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
@@ -35,11 +34,9 @@ const PresenPage: NextPage = () => {
   }, [setUrl]);
 
   return (
-    <SWRConfig value={{ suspense: true }}>
-      <div className={rootStyle}>
-        <PresenLayout Sidebar={TrackingLayout} url={url} />
-      </div>
-    </SWRConfig>
+    <div className={rootStyle}>
+      <PresenLayout Sidebar={TrackingLayout} url={url} />
+    </div>
   );
 };
 

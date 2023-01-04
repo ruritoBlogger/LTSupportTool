@@ -1,7 +1,6 @@
 import { css } from "@emotion/css";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import { SWRConfig } from "swr";
 import Navigator from "@components/Navigator";
 
 const Tracking3DComponent = dynamic(() => import("@components/Tracking3D"), {
@@ -10,14 +9,12 @@ const Tracking3DComponent = dynamic(() => import("@components/Tracking3D"), {
 
 const Tracking3D: NextPage = () => {
   return (
-    <SWRConfig value={{ suspense: true }}>
-      <div className={rootStyle}>
-        <div className={hoverStyle}>
-          <Navigator />
-        </div>
-        <Tracking3DComponent showCamera />
+    <div className={rootStyle}>
+      <div className={hoverStyle}>
+        <Navigator />
       </div>
-    </SWRConfig>
+      <Tracking3DComponent showCamera />
+    </div>
   );
 };
 
