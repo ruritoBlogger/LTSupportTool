@@ -180,7 +180,7 @@ export const draw = (
   lastUpdateTime: number,
   model: AppCubismUserModel,
   faceRig: TFace | undefined,
-  type: 0 = 0
+  type: 0 | 1 = 0
 ) => {
   const gl = canvas.getContext("webgl");
   if (gl === null) throw new Error("WebGL未対応のブラウザです。");
