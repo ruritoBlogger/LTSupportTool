@@ -21,9 +21,6 @@
       "@config/*": [
         "./src/config/*"
       ],
-      "@state/*": [
-        "./src/state/*"
-      ],
       "@hooks/*": [
         "./src/hooks/*"
       ]
