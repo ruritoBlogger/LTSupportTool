@@ -34,7 +34,7 @@ export const rigRotation = (
 // Animate Position Helper Function
 export const rigPosition = (
   name: string,
-  vrm: VRM | nll,
+  vrm: VRM | null,
   position = { x: 0, y: 0, z: 0 },
   dampener = 1,
   lerpAmount = 0.3
@@ -74,12 +74,12 @@ export const rigFace = (
   // for VRM, 1 is closed, 0 is open.
   riggedFace.eye.l = lerp(
     clamp(1 - riggedFace.eye.l, 0, 1),
-    Blendshape.getValue(PresetName.Blink),
+    Blendshape.getValue(PresetName.Blink)!,
     0.5
   );
   riggedFace.eye.r = lerp(
     clamp(1 - riggedFace.eye.r, 0, 1),
-    Blendshape.getValue(PresetName.Blink),
+    Blendshape.getValue(PresetName.Blink)!,
     0.5
   );
   riggedFace.eye = Kalidokit.Face.stabilizeBlink(
@@ -91,23 +91,23 @@ export const rigFace = (
   // Interpolate and set mouth blendshapes
   Blendshape.setValue(
     PresetName.I,
-    lerp(riggedFace.mouth.shape.I, Blendshape.getValue(PresetName.I), 0.5)
+    lerp(riggedFace.mouth.shape.I, Blendshape.getValue(PresetName.I)!, 0.5)
   );
   Blendshape.setValue(
     PresetName.A,
-    lerp(riggedFace.mouth.shape.A, Blendshape.getValue(PresetName.A), 0.5)
+    lerp(riggedFace.mouth.shape.A, Blendshape.getValue(PresetName.A)!, 0.5)
   );
   Blendshape.setValue(
     PresetName.E,
-    lerp(riggedFace.mouth.shape.E, Blendshape.getValue(PresetName.E), 0.5)
+    lerp(riggedFace.mouth.shape.E, Blendshape.getValue(PresetName.E)!, 0.5)
   );
   Blendshape.setValue(
     PresetName.O,
-    lerp(riggedFace.mouth.shape.O, Blendshape.getValue(PresetName.O), 0.5)
+    lerp(riggedFace.mouth.shape.O, Blendshape.getValue(PresetName.O)!, 0.5)
   );
   Blendshape.setValue(
     PresetName.U,
-    lerp(riggedFace.mouth.shape.U, Blendshape.getValue(PresetName.U), 0.5)
+    lerp(riggedFace.mouth.shape.U, Blendshape.getValue(PresetName.U)!, 0.5)
   );
 
   //PUPILS
