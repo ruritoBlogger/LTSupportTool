@@ -37,7 +37,7 @@
     "eslint-config-next": "12.3.4",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-import": "2.27.5",
-    "eslint-plugin-react": "7.31.11",
+    "eslint-plugin-react": "7.32.2",
     "eslint-plugin-simple-import-sort": "8.0.0",
     "husky": "8.0.2",
     "lint-staged": "13.1.0",
